@@ -1,10 +1,10 @@
 import asyncio
 import re
-from playwright.sync_api import Playwright, async_playwright, expect
+from playwright.sync_api import Playwright, sync_playwright, expect
 
 
 def run(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=True, slow_mo=2000)
+    browser = playwright.chromium.launch(headless=False, slow_mo=2000)
     context = browser.new_context()
     page = context.new_page()
     page.goto("https://login.10times.com/")
@@ -23,12 +23,9 @@ def run(playwright: Playwright) -> None:
     browser.close()
 
 
-def run() -> None:
-    with sync_playwright() as playwright:
+def main() -> None:
+    async with sync_playwright() as playwright:
         run(playwright)
 
 
-run()
-
-if __name__ == "__main__":
-    run()
+asyncio.run(main())

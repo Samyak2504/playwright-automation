@@ -1,30 +1,26 @@
-import asyncio
-# import re
-from playwright.async_api import Playwright, async_playwright, expect
+from playwright.sync_api import sync_playwright
 
+def run():
+    with sync_playwright() as p:
+        browser = p.firefox.launch(headless=False, slow_mo=1000)
+        context = browser.new_context()
+        page = context.new_page()
 
-async def run(playwright: Playwright) -> None:
-    browser = await playwright.firefox.launch(headless=True, slow_mo=2000)
-    context = await browser.new_context()
-    page = await context.new_page()
-    await page.goto("https://login.10times.com/")
-    await page.get_by_role("link", name="Partner Login").click()
-    await page.get_by_placeholder("Email Address").click()
-    await page.get_by_placeholder("Email Address").fill("samyak@10times.com")
-    await page.get_by_placeholder("Password").click()
-    await page.get_by_placeholder("Password").fill("QWERTY")
-    await page.get_by_role("button", name="Login to your account").click()
-    await page.get_by_role("button", name="Close").click()
-    await page.locator("(//a[@class='btn btn-default'])").click()
+        page.goto("https://login.10times.com/")
+        page.get_by_role("link", name="Partner Login").click()
+        page.get_by_placeholder("Email Address").fill("samyak@10times.com")
+        page.get_by_placeholder("Password").fill("QWERTY")
+        page.get_by_role("button", name="Login to your account").click()
+        page.get_by_role("button", name="Close").click()
 
-    # ---------------------
-    await context.close()
-    await browser.close()
+        page.locator("(//a[@class='btn btn-default'])").click()
+        page.locator("(//a[@class='btn btn-default btn-xs profileAcc'])[1]").click()
+        page.locator("(//a[@class='introjs-skipbutton'])").click()
 
+        page.wait_for_timeout(3000)
 
-async def main() -> None:
-    async with async_playwright() as playwright:
-        await run(playwright)
+        context.close()
+        browser.close()
 
-# Run the asyncio event loop and execute the `main()` coroutine/method to start the program
-asyncio.run(main())
+if __name__ == "__main__":
+    run()

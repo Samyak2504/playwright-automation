@@ -1,8 +1,10 @@
+import asyncio
 import re
-from playwright.sync_api import Playwright, sync_playwright
+from playwright.sync_api import Playwright, sync_playwright, expect
+
 
 def run(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=True, slow_mo=2000)
+    browser = playwright.chromium.launch(headless=False, slow_mo=2000)
     context = browser.new_context()
     page = context.new_page()
     page.goto("https://login.10times.com/")
@@ -16,11 +18,11 @@ def run(playwright: Playwright) -> None:
     page.goto("https://login.10times.com/event/eadmin/928626/agenda")
     page.get_by_role("button", name=" Add Session").click()
     page.get_by_placeholder("Agenda Title").click()
-    page.get_by_placeholder("Agenda Title").fill("Qwerty 122345")
+    page.get_by_placeholder("Agenda Title").fill("Qwerty 12345")
     page.get_by_placeholder("Session Type").click()
     page.get_by_role("link", name="Break", exact=True).click()
     page.get_by_placeholder("Date").click()
-    page.get_by_role("cell", name="9", exact=True).click()
+    page.get_by_role("cell", name="31", exact=True).click()
     page.get_by_placeholder("Start time").click()
     page.get_by_placeholder("End time").click()
     page.get_by_text("Timings Start time should be").click()
@@ -32,6 +34,10 @@ def run(playwright: Playwright) -> None:
     context.close()
     browser.close()
 
-if __name__ == "__main__":
-    with sync_playwright() as playwright:
+
+def main() -> None:
+    async with sync_playwright() as playwright:
         run(playwright)
+
+
+asyncio.run(main())
