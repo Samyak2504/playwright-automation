@@ -1,8 +1,8 @@
 import re
-from playwright.sync_api import Playwright, async_playwright
+from playwright.sync_api import Playwright, sync_playwright
 
 
-def run(playwright: Playwright) -> None:
+def run_script(playwright: Playwright) -> None:
     browser = playwright.firefox.launch(headless=True, slow_mo=2000)
     context = browser.new_context()
     page = context.new_page()
@@ -41,11 +41,7 @@ def run(playwright: Playwright) -> None:
 
 def run() -> None:
     with sync_playwright() as playwright:
-        run(playwright)
-
-
-# Run the main async function
-run()
+        run_script(playwright)
 
 if __name__ == "__main__":
     run()
