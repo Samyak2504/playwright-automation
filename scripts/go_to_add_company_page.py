@@ -3,7 +3,7 @@ from playwright.sync_api import sync_playwright
 
 def run():
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=False, slow_mo=1000)
+        browser = p.firefox.launch(headless=True, slow_mo=1000)
         context = browser.new_context()
         page = context.new_page()
 
