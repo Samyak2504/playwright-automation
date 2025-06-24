@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 from playwright.sync_api import Playwright, sync_playwright
-=======
-import re
-from playwright.sync_api import Playwright, sync_playwright, expect
->>>>>>> 8840c4d9671bdf7019e6c9a4e489368757a98eda
 
 
 def run_script(playwright: Playwright) -> None:
@@ -32,9 +27,5 @@ def run() -> None:
         run_script(playwright)
 
 
-<<<<<<< HEAD
 if __name__ == "__main__":
     run()
-=======
-asyncio.run(main())
->>>>>>> 8840c4d9671bdf7019e6c9a4e489368757a98eda

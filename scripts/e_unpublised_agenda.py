@@ -1,29 +1,8 @@
-<<<<<<< HEAD
-<<<<<<<< HEAD:scripts/e_unpublised_agenda.py
 from playwright.sync_api import Playwright, sync_playwright
-=======
-<<<<<<<< HEAD:scripts/edit_agenda_unpublish.py
-from playwright.sync_api import Playwright, sync_playwright
-========
-import re
-from playwright.sync_api import Playwright, sync_playwright, expect
->>>>>>>> 8840c4d9671bdf7019e6c9a4e489368757a98eda:scripts/e_unpublised_agenda.py
->>>>>>> 8840c4d9671bdf7019e6c9a4e489368757a98eda
 
 
 def run_script(playwright: Playwright) -> None:
     browser = playwright.firefox.launch(headless=True, slow_mo=2000)
-<<<<<<< HEAD
-========
-import re
-from playwright.sync_api import Playwright, sync_playwright, expect
-
-
-def run_script(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=True, slow_mo=2000)
->>>>>>>> 8840c4d9671bdf7019e6c9a4e489368757a98eda:scripts/edit_agenda_type.py
-=======
->>>>>>> 8840c4d9671bdf7019e6c9a4e489368757a98eda
     context = browser.new_context()
     page = context.new_page()
 
@@ -48,18 +27,5 @@ def run() -> None:
         run_script(playwright)
 
 
-<<<<<<< HEAD
-<<<<<<<< HEAD:scripts/e_unpublised_agenda.py
-========
-
->>>>>>>> 8840c4d9671bdf7019e6c9a4e489368757a98eda:scripts/edit_agenda_type.py
 if __name__ == "__main__":
     run()
-=======
-<<<<<<<< HEAD:scripts/edit_agenda_unpublish.py
-if __name__ == "__main__":
-    run()
-========
-asyncio.run(main())
->>>>>>>> 8840c4d9671bdf7019e6c9a4e489368757a98eda:scripts/e_unpublised_agenda.py
->>>>>>> 8840c4d9671bdf7019e6c9a4e489368757a98eda
