@@ -1,0 +1,38 @@
+from playwright.sync_api import Playwright, sync_playwright
+
+
+def run_script(playwright: Playwright) -> None:
+    browser = playwright.firefox.launch(headless=True, slow_mo=2000)
+    context = browser.new_context()
+    page = context.new_page()
+
+    page.goto("https://login.10times.com/")
+    page.get_by_role("link", name="Partner Login").click()
+    page.get_by_placeholder("Email Address").fill("samyak@10times.com")
+    page.get_by_placeholder("Password").fill("QWERTY")
+    page.get_by_role("button", name="Login to your account").click()
+
+    page.locator("(//button[@class='close' and @aria-label='Close'])[4]").click()
+
+
+    page.locator("(//a[@class='btn btn-default'])").click()
+    page.locator("(//a[@class='btn btn-default btn-xs profileAcc'])[1]").click()
+
+    try:
+        page.locator("(//a[@class='introjs-skipbutton'])").click()
+    except:
+        pass
+
+    page.wait_for_timeout(3000)
+
+    context.close()
+    browser.close()
+
+
+def run() -> None:
+    with sync_playwright() as playwright:
+        run_script(playwright)
+
+
+if __name__ == "__main__":
+    run()

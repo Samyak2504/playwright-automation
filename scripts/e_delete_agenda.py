@@ -1,12 +1,11 @@
-import asyncio
-import re
-from playwright.sync_api import Playwright, async_playwright, expect
+from playwright.sync_api import Playwright, sync_playwright
 
 
-def run(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=True, slow_mo=2000)
+def run_script(playwright: Playwright) -> None:
+    browser = playwright.firefox.launch(headless=True, slow_mo=2000)
     context = browser.new_context()
     page = context.new_page()
+    
     page.goto("https://login.10times.com/")
     page.get_by_role("link", name="Partner Login").click()
     page.get_by_placeholder("Email Address").click()
@@ -16,7 +15,9 @@ def run(playwright: Playwright) -> None:
     page.get_by_role("button", name="Login to your account").click()
     page.get_by_role("button", name="Close").click()
     page.goto("https://login.10times.com/event/eadmin/1154170/agenda")
-    page.locator("//label[@class='tgl-btn' and @for='b731312'][1]").click()
+    page.locator("(//input[@id='cb1'])").click()
+    page.locator("(//button[text()='Delete'])[1]").click()
+
 
     # ---------------------
     context.close()
@@ -25,10 +26,8 @@ def run(playwright: Playwright) -> None:
 
 def run() -> None:
     with sync_playwright() as playwright:
-        run(playwright)
+        run_script(playwright)
 
-
-run()
 
 if __name__ == "__main__":
     run()

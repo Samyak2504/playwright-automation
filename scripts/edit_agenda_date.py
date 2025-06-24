@@ -1,12 +1,11 @@
-import asyncio
-import re
-from playwright.sync_api import Playwright, sync_playwright, expect
+from playwright.sync_api import Playwright, sync_playwright
 
 
-def run(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=True, slow_mo=2000)
+def run_script(playwright: Playwright) -> None:
+    browser = playwright.firefox.launch(headless=True, slow_mo=2000)
     context = browser.new_context()
     page = context.new_page()
+
     page.goto("https://login.10times.com/")
     page.get_by_role("link", name="Partner Login").click()
     page.get_by_placeholder("Email Address").click()
@@ -15,14 +14,11 @@ def run(playwright: Playwright) -> None:
     page.get_by_placeholder("Password").fill("QWERTY")
     page.get_by_role("button", name="Login to your account").click()
     page.get_by_role("button", name="Close").click()
-    page.goto("https://login.10times.com/event/eadmin/1154170/agenda")
+    page.goto("https://login.10times.com/event/eadmin/928626/agenda")
     page.locator("(//input[@id='cb1'])").click()
-    page.locator("(//a[@class='btn btn-xs btn-default'])[1]").click()
+    page.locator("(//button[text()='Edit'])[1]").click()
     page.get_by_placeholder("Date").click()
     page.get_by_role("cell", name="9", exact=True).click()
-    page.get_by_placeholder("Start time").click()
-    page.get_by_placeholder("End time").click()
-    page.get_by_text("Timings Start time should be").click()
     page.get_by_role("button", name="Save").click()
     page.get_by_role("link", name="Listing").click()
 
@@ -31,9 +27,10 @@ def run(playwright: Playwright) -> None:
     browser.close()
 
 
-def main() -> None:
-    async with sync_playwright() as playwright:
-        run(playwright)
+def run() -> None:
+    with sync_playwright() as playwright:
+        run_script(playwright)
 
 
-asyncio.run(main())
+if __name__ == "__main__":
+    run()

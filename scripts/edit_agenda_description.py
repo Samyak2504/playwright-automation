@@ -1,9 +1,8 @@
-import asyncio
 from playwright.sync_api import Playwright, sync_playwright
 
 
-def run(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=True, slow_mo=2000)
+def run_script(playwright: Playwright) -> None:
+    browser = playwright.firefox.launch(headless=True, slow_mo=2000)
     context = browser.new_context()
     page = context.new_page()
 
@@ -42,10 +41,10 @@ def run(playwright: Playwright) -> None:
     browser.close()
 
 
-def main() -> None:
-    async with sync_playwright() as playwright:
-        run(playwright)
+def run() -> None:
+    with sync_playwright() as playwright:
+        run_script(playwright)
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    run()

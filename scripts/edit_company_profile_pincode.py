@@ -1,8 +1,7 @@
-import asyncio
-from playwright.sync_api import Playwright, async_playwright
+from playwright.sync_api import Playwright, sync_playwright
 
 
-def run(playwright: Playwright) -> None:
+def run_script(playwright: Playwright) -> None:
     browser = playwright.firefox.launch(headless=True, slow_mo=2000)
     context = browser.new_context()
     page = context.new_page()
@@ -15,7 +14,9 @@ def run(playwright: Playwright) -> None:
     page.get_by_placeholder("Password").click()
     page.get_by_placeholder("Password").fill("QWERTY")
     page.get_by_role("button", name="Login to your account").click()
-    page.get_by_role("button", name="Close").click()
+
+    page.locator("(//button[@class='close' and @aria-label='Close'])[4]").click()
+
 
     page.locator("(//a[@class='btn btn-default'])").click()
     page.locator("(//a[@class='btn btn-default btn-xs profileAcc'])[1]").click()
@@ -26,7 +27,7 @@ def run(playwright: Playwright) -> None:
     # Change the value of the Pincode input using XPath
     address_input = page.locator("(//div[@class='col-sm-4']/input[@id='pincode'])")
     address_input.click()
-    address_input.fill("854318")  # Change the value here
+    address_input.fill("85418")  # Change the value here
 
     page.locator("(//div[@class='box-footer']/button[text()='Save'])").click()
     page.locator("(//div[@id='alert']//button[@id='ok-button' and text()='Ok'])").click()
@@ -41,11 +42,8 @@ def run(playwright: Playwright) -> None:
 
 def run() -> None:
     with sync_playwright() as playwright:
-        run(playwright)
+        run_script(playwright)
 
-
-# Run the main async function
-run()
 
 if __name__ == "__main__":
     run()
