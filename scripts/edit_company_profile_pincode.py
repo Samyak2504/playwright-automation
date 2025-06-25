@@ -2,7 +2,7 @@ from playwright.sync_api import Playwright, sync_playwright
 
 
 def run_script(playwright: Playwright) -> None:
-import re
+    import re
 from playwright.sync_api import Playwright, sync_playwright
 
 def run_test(playwright: Playwright) -> None:
