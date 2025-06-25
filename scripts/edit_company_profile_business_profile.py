@@ -52,7 +52,7 @@ def run_script(playwright: Playwright) -> None:
     # Optional pause to view result
     page.wait_for_timeout(3000)
 
-=======
+
     page.get_by_placeholder("Email Address").click()
     page.get_by_placeholder("Email Address").fill("samyak@10times.com")
     page.get_by_placeholder("Password").click()
