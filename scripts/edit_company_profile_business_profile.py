@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 import re
->>>>>>> 8840c4d9671bdf7019e6c9a4e489368757a98eda
 from playwright.sync_api import Playwright, sync_playwright
 
 
@@ -13,7 +10,6 @@ def run_script(playwright: Playwright) -> None:
     # Navigate and login
     page.goto("https://login.10times.com/")
     page.get_by_role("link", name="Partner Login").click()
-<<<<<<< HEAD
     page.get_by_placeholder("Email Address").fill("samyak@10times.com")
     page.get_by_placeholder("Password").fill("QWERTY")
     page.get_by_role("button", name="Login to your account").click()
@@ -82,7 +78,6 @@ def run_script(playwright: Playwright) -> None:
     page.wait_for_timeout(3000)
 
     # ---------------------
->>>>>>> 8840c4d9671bdf7019e6c9a4e489368757a98eda
     context.close()
     browser.close()
 
@@ -91,9 +86,6 @@ def run() -> None:
     with sync_playwright() as playwright:
         run_script(playwright)
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 8840c4d9671bdf7019e6c9a4e489368757a98eda
 if __name__ == "__main__":
     run()
