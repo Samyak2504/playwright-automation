@@ -1,14 +1,11 @@
-<<<<<<< HEAD
 from playwright.sync_api import Playwright, sync_playwright
 
 
 def run_script(playwright: Playwright) -> None:
-=======
 import re
 from playwright.sync_api import Playwright, sync_playwright
 
 def run_test(playwright: Playwright) -> None:
->>>>>>> 8840c4d9671bdf7019e6c9a4e489368757a98eda
     browser = playwright.firefox.launch(headless=True, slow_mo=2000)
     context = browser.new_context()
     page = context.new_page()
@@ -45,12 +42,9 @@ def run_test(playwright: Playwright) -> None:
 
 def run() -> None:
     with sync_playwright() as playwright:
-<<<<<<< HEAD
         run_script(playwright)
 
-=======
         run_test(playwright)
->>>>>>> 8840c4d9671bdf7019e6c9a4e489368757a98eda
 
 if __name__ == "__main__":
     run()
