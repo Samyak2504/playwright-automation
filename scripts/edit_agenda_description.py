@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 import re
->>>>>>> 8840c4d9671bdf7019e6c9a4e489368757a98eda
 from playwright.sync_api import Playwright, sync_playwright
 
 
