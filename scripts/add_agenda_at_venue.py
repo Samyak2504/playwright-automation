@@ -3,7 +3,7 @@ import time
 
 
 def run_script(playwright: Playwright) -> None:
-    browser = playwright.firefox.launch(headless=False, slow_mo=2000)
+    browser = playwright.firefox.launch(headless=True, slow_mo=2000)
     context = browser.new_context()
     page = context.new_page()
 
