@@ -48,8 +48,8 @@ def run_script(playwright: Playwright) -> None:
     page.frame_locator("#agenda_form iframe").get_by_text("Add a brief description about").click()
 
     # Save and go back to Listing
-    page.get_by_role("button", name="Save").click()
-    page.get_by_role("link", name="Listing").click()
+    page.locator("(//button[@id='submit1'])").click(timeout=5000)
+    page.locator("(//a[text()='Listing'])").click(timeout=5000)
 
     # Cleanup
     context.close()

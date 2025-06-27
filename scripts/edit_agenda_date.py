@@ -18,7 +18,7 @@ def run_script(playwright: Playwright) -> None:
     page.locator("(//input[@id='cb1'])").click()
     page.locator("(//button[text()='Edit'])[1]").click()
     page.get_by_placeholder("Date").click()
-    page.get_by_role("cell", name="9", exact=True).click()
+    page.get_by_role("cell", name="15", exact=True).click()
     page.get_by_role("button", name="Save").click()
     page.get_by_role("link", name="Listing").click()
 
