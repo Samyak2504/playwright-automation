@@ -56,7 +56,7 @@ def run_script(playwright: Playwright) -> None:
         page.wait_for_selector("text=Session Successfully Added", timeout=5000)
         print("✅ Agenda saved successfully.")
     except Exception as e:
-        print("⚠️ Agenda save confirmation not found: ", repr(e))
+        print("Error: ", repr(e))
 
     # Debug: Save screenshot and HTML after save
     page.screenshot(path="debug_after_submit.png", full_page=True)
