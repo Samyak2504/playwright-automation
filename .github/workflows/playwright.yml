@@ -30,7 +30,7 @@ jobs:
       run: |
         mkdir -p logs
         failed=0
-        for file in scripts/add_agenda_at_venue.py; do
+        for file in scripts/*.py; do
           echo "Running $file"
           if ! python "$file" >> logs/$(basename "$file").log 2>&1; then
             echo "$file FAILED" >> logs/failures.txt
