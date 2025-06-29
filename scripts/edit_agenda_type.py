@@ -1,16 +1,10 @@
-from playwright.sync_api import Playwright, sync_playwright
-
-
-def run_script(playwright: Playwright) -> None:
-    browser = playwright.firefox.launch(headless=True, slow_mo=2000)
-
 
 import re
 from playwright.sync_api import Playwright, sync_playwright, expect
 
 
 def run_script(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=True, slow_mo=2000)
+    browser = playwright.chromium.launch(headless=False, slow_mo=2000)
     context = browser.new_context()
     page = context.new_page()
 
@@ -30,7 +24,6 @@ def run_script(playwright: Playwright) -> None:
     page.get_by_role("button", name="Save").click()
     page.get_by_role("link", name="Listing").click()
 
-    page.locator("//label[@class='tgl-btn' and @for='b731313'][1]").click()
 
     # ---------------------
     context.close()

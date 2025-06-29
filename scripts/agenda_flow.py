@@ -14,7 +14,7 @@ def run_script(playwright: Playwright) -> None:
     page.get_by_placeholder("Password").fill("QWERTY")
     page.get_by_role("button", name="Login to your account").click()
 
-    # Close popup if exists
+    # Close popup if it exists
     try:
         page.locator("(//button[@class='close' and @aria-label='Close'])[4]").click(timeout=5000)
     except:
@@ -27,6 +27,7 @@ def run_script(playwright: Playwright) -> None:
     # Fill Agenda Form
     unique_title = f"Auto Agenda {int(time.time())}"
     page.get_by_placeholder("Agenda Title").fill(unique_title)
+
     page.get_by_placeholder("Session Type").click()
     page.get_by_role("link", name="Break", exact=True).click()
 
@@ -34,7 +35,7 @@ def run_script(playwright: Playwright) -> None:
     page.get_by_placeholder("Date").click()
     page.get_by_role("cell", name="12", exact=True).click()
 
-    # Dismiss datepicker popup
+    # Dismiss datepicker
     page.keyboard.press("Escape")
     page.wait_for_timeout(500)
 
@@ -42,16 +43,20 @@ def run_script(playwright: Playwright) -> None:
     page.get_by_placeholder("Start time").click()
     page.get_by_placeholder("End time").click()
 
-    # Interact with iframe for description
+    # Click into the iframe to trigger description input
     page.get_by_text("Timings Start time should be").click()
     page.frame_locator("#agenda_form iframe").get_by_text("Add a brief description about").click()
 
-    # Save agenda and wait for potential redirect
+    # Save agenda (no navigation expected)
+    page.locator("button#submit1").click()
+    page.wait_for_timeout(3000)  # Wait for AJAX/UI update
+
+    # Optional: Check for success message
     try:
-        with page.expect_navigation(timeout=15000):
-            page.locator("button#submit1").click()
+        page.wait_for_selector("text=Session Successfully Added", timeout=5000)
+        print("✅ Agenda saved successfully.")
     except Exception as e:
-        print("Navigation after clicking 'Save' did not happen:", e)
+        print("Error: ", repr(e))
 
     # Debug: Save screenshot and HTML after save
     page.screenshot(path="debug_after_submit.png", full_page=True)
@@ -62,8 +67,9 @@ def run_script(playwright: Playwright) -> None:
     try:
         page.wait_for_selector("a:has-text('Listing')", timeout=10000)
         page.locator("a:has-text('Listing')").click()
+        print("✅ Navigated to 'Listing' successfully.")
     except Exception as e:
-        print("Failed to click 'Listing':", e)
+        print("❌ Failed to click 'Listing':", e)
         page.screenshot(path="error_listing_not_found.png", full_page=True)
 
     # Cleanup
