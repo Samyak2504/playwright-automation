@@ -26,7 +26,7 @@ def run(playwright):
         pass  # Ignore if popup not shown
 
     # Navigate to Fees page
-    page.goto("https://login.10times.com/event/eadmin/1154170/fees")
+    page.goto("https://login.10times.com/event/eadmin/928626/fees")
 
     # Toggle the first switch
     page.locator("(//span[@class='slider round'])[1]").click()

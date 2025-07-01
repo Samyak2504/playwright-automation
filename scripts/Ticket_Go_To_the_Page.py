@@ -14,7 +14,7 @@ def run_script(playwright: Playwright) -> None:
 
     page.locator("(//button[@class='close' and @aria-label='Close'])[4]").click()
 
-    page.goto("https://login.10times.com/event/eadmin/1154170/fees")
+    page.goto("https://login.10times.com/event/eadmin/928626/fees")
 
 
     context.close()

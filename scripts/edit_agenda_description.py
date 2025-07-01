@@ -18,7 +18,7 @@ def run_script(playwright: Playwright) -> None:
     page.get_by_role("button", name="Close").click()
 
     # Step 2: Go to agenda page
-    page.goto("https://login.10times.com/event/eadmin/1154170/agenda")
+    page.goto("https://login.10times.com/event/eadmin/928626/agenda")
 
     # Step 3: Click checkbox and Edit button
     page.locator("(//input[@id='cb1'])").click()

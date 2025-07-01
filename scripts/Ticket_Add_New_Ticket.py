@@ -24,7 +24,7 @@ def run(playwright):
         pass  # Ignore if not found
 
     # Go to ticket fees page
-    page.goto("https://login.10times.com/event/eadmin/1154170/fees")
+    page.goto("https://login.10times.com/event/eadmin/928626/fees")
 
     # Count existing tickets (adjust selector based on actual ticket list row)
     existing_ticket_buttons = page.locator("button[id^='submitTicketIdN']").all()

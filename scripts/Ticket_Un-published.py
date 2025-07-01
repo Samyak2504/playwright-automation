@@ -26,7 +26,7 @@ def run(playwright):
         pass
 
     # Go to fees page
-    page.goto("https://login.10times.com/event/eadmin/1154170/fees")
+    page.goto("https://login.10times.com/event/eadmin/928626/fees")
 
     # Toggle second switch in ticket table
     page.locator("(//div[@class='TicketPublishtTbale']//span[@class='slider round'])[2]").click()

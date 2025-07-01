@@ -14,7 +14,7 @@ def run_script(playwright: Playwright) -> None:
     page.get_by_placeholder("Password").fill("QWERTY")
     page.get_by_role("button", name="Login to your account").click()
     page.get_by_role("button", name="Close").click()
-    page.goto("https://login.10times.com/event/eadmin/1154170/agenda")
+    page.goto("https://login.10times.com/event/eadmin/928626/agenda")
     page.locator("(//input[@id='cb1'])").click()
     page.locator("(//button[text()='Edit'])[1]").click()
     page.get_by_placeholder("Agenda Title").click()

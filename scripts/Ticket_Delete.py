@@ -23,7 +23,7 @@ def run(playwright):
         pass
 
     # Navigate to ticket fees page
-    page.goto("https://login.10times.com/event/eadmin/1154170/fees")
+    page.goto("https://login.10times.com/event/eadmin/928626/fees")
 
     # Handle confirmation dialog
     def handle_dialog(dialog):
