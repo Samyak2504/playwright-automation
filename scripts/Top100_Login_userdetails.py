@@ -4,7 +4,7 @@ import time
 
 def get_temp_email_and_otp():
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=False, slow_mo=1000)
+        browser = p.firefox.launch(headless=True, slow_mo=1000)
 
         custom_user_agent = "TenTimes internal Testing/tentimestesting10t112"
 
