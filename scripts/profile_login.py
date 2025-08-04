@@ -35,7 +35,21 @@ def get_temp_email_and_otp():
         page2.get_by_role("button", name="Login").click()
         page2.get_by_placeholder("Email").click()
         page2.fill("input[name='email1']", temp_email)
-        page2.click("input[type='submit']")  # Submit the form
+
+        # ✅ Check if checkbox exists and is visible, click if so
+        try:
+            checkbox = page2.locator("//*[contains(@class, 'server_check_box') and @role='button']")
+            if checkbox.is_visible():
+                checkbox.click()
+                print("✔ Checkbox clicked.")
+            else:
+                print("⚠ Checkbox not visible.")
+        except Exception as e:
+            print(f"⚠ Checkbox not found or error occurred: {e}")
+
+        # ✅ Click the submit button
+        page2.click("input[type='submit']")
+        print("➡ Submit button clicked after handling checkbox.")
 
         # Wait for OTP email to arrive in Temp-Mail inbox
         page.bring_to_front()  # Switch back to the Temp-Mail page
