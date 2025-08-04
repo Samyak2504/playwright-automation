@@ -22,16 +22,16 @@ def get_temp_email_and_otp():
         page.mouse.move(100, 100)  # simulate mouse movement
         page.mouse.wheel(0, 50)  # simulate scroll down
 
+        page.wait_for_timeout(3000)
+        page.locator("#Top100CategorySearch").click()
+        page.wait_for_selector("#cust-category li")
+        page.locator("#cust-category li", has_text="Fashion & Beauty").click()
 
         page.wait_for_timeout(3000)
         page.locator("#Top100LocationSearch").click()
         page.wait_for_selector("#cust-countryid li")
         page.locator("#cust-countryid li", has_text="India").click()
 
-        page.wait_for_timeout(3000)
-        page.locator("#Top100CategorySearch").click()
-        page.wait_for_selector("#cust-category li")
-        page.locator("#cust-category li", has_text="Fashion & Beauty").click()
 
         context.close()
         browser.close()
