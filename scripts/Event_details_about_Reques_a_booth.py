@@ -22,7 +22,7 @@ def get_temp_email_and_otp():
 
         page2 = context.new_page()
         page2.goto("https://10times.com/event/928626")
-        page2.get_by_role("button", name="Save").click()
+        page2.get_by_role("button", name="Request a Booth").click()
         page2.get_by_placeholder("Email").click()
         page2.fill("input[name='email1']", temp_email)
         page2.click("input[type='submit']")
