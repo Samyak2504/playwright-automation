@@ -20,7 +20,7 @@ def get_temp_email_and_otp():
         page.goto("https://10times.com/event/928626")
 
         # ✅ Click the Followers
-        page.locator("//span[text()='Reviews']").click()
+        page.locator("//span[contains(@class, 'fw-bold') and contains(text(), 'Followers')]").click()
 
         page.wait_for_timeout(5000)
 
