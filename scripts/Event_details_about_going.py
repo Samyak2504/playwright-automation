@@ -58,7 +58,7 @@ def get_temp_email_and_otp():
 
                 # Fill Full Name
                 page2.wait_for_selector('//input[@placeholder="Enter your full name"]', timeout=10000)
-                page2.locator('//input[@placeholder="Enter your full name"]').fill("Samyak")
+                page2.locator('//input[@placeholder="Enter your full name"]').fill("Samy")
 
                 # Fill Company Name
                 page2.locator('//input[@placeholder="Company Name"]').fill("Techno")
