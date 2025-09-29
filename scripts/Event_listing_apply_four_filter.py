@@ -5,7 +5,7 @@ from playwright.sync_api import sync_playwright
 def get_temp_email_and_otp():
     with sync_playwright() as p:
         # ✅ Launch browser
-        browser = p.firefox.launch(headless=False, slow_mo=1000)
+        browser = p.firefox.launch(headless=True, slow_mo=1000)
 
         # ✅ Define custom user-agent
         custom_user_agent = "TenTimes internal Testing/tentimestesting10t112"  # Corrected quotes
