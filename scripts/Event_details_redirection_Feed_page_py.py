@@ -19,8 +19,9 @@ def get_temp_email_and_otp():
         page = context.new_page()
         page.goto("https://10times.com/magic")
 
-        # ✅ Click the Followers
-        page.locator("//span[text()='Feed']").click()
+        # ✅ Click the Feed
+        page.locator('//a[contains(@class, "tt-tabs-other") and normalize-space(text())="Feed"]').click()
+
 
         page.wait_for_timeout(5000)
 

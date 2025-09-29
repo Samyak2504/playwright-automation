@@ -1,6 +1,6 @@
+from playwright.sync_api import sync_playwright
 import re
 import time
-from playwright.sync_api import sync_playwright
 
 def get_temp_email_and_otp():
     with sync_playwright() as p:
@@ -8,7 +8,7 @@ def get_temp_email_and_otp():
         browser = p.firefox.launch(headless=False, slow_mo=1000)
 
         # ✅ Define custom user-agent
-        custom_user_agent = "TenTimes internal Testing/tentimestesting10t112"  # Corrected quotes
+        custom_user_agent = "TenTimes internal Testing/tentimestesting10t112"
 
         # ✅ Create context with user-agent
         context = browser.new_context(
@@ -16,37 +16,61 @@ def get_temp_email_and_otp():
             extra_http_headers={"User-Agent": custom_user_agent}
         )
 
-        # ✅ Create page from context
+        # Create a new page using that context
         page = context.new_page()
-        page.goto("https://10times.com/events")
 
-        # ✅ Apply 1st Format filter by clicking on the specified <a> element
-        page.locator("//a[@class='d-flex btn btn-sm w-100 text-start px-0 py-2 c-ga' and @href='/tradeshows' and @data-ga-category='Listing Filter' and @data-ga-action='City' and @data-ga-label='Event Listing | Filter | Tradeshows']").click()
+        # Step 1: Navigate to Temp-Mail
+        page.goto("https://tempmailo.com")
+        time.sleep(5)  # Wait for the email to load
 
-        # ✅ Slight scroll to load filters (scroll just 300px)
-        page.evaluate("window.scrollBy(0, 100);")
-        time.sleep(2)  # Wait for content to load
+        # Step 2: Get Temporary Email Address
+        temp_email = page.locator("input#i-email").input_value()
+        print(f"Temporary Email: {temp_email}")
 
-        # ✅ 2nd filter Use exact XPath to click "London" filter
-        locator = page.locator("//span[@class='d-flex justify-content-between' and normalize-space()='London']")
-        locator.first.click()  # Use .first in case of duplicates
+        # Step 3: Use temp_email for signup on the target site
+        page2 = context.new_page()
+        page2.goto("https://10times.com/events")  # Replace with your signup page URL
 
-        # ✅ 3rd filter Use exact XPath to click "Education & Training" filter
-        locator = page.locator("//span[normalize-space()='Education & Training']")
-        locator.first.click()  # Use .first in case of duplicates
+        # Fill the signup form
+        page2.get_by_role("button", name="Login").click()
+        page2.get_by_placeholder("Email").click()
+        page2.fill("input[name='email1']", temp_email)
+        page2.click("input[type='submit']")  # Submit the form
 
-        # ✅ 4th filter Use exact XPath to click "HR, Jobs & Career" filter
-        locator = page.locator("//span[@class='d-flex justify-content-between' and normalize-space()='HR, Jobs & Career']")
-        locator.first.click()  # Use .first in case of duplicates
+        # Wait for OTP email to arrive in Temp-Mail inbox
+        page.bring_to_front()  # Switch back to the Temp-Mail page
+        otp = None
 
-        # Wait for the page to load after applying the filter
-        page.wait_for_timeout(5000)  # You can adjust the timeout as per your requirement
+        try:
+            page.wait_for_selector("text=mail@10times.com", timeout=30000)
+            page.locator("text=mail@10times.com").first.click()
+            time.sleep(2)
 
-        # ✅ Capture email or OTP (if needed, implement further steps here)
-        # You can add code to capture email or OTP as per your need.
+            otp_element = page.locator("div.mail-item-sub").text_content()
+            otp_match = re.search(r'OTP - (\d+)', otp_element)
+            if otp_match:
+                otp = otp_match.group(1)
+                print(f"Extracted OTP: {otp}")
+            else:
+                print("OTP not found!")
 
-        # ✅ Close context and browser
-        context.close()
+        except Exception as e:
+            print("Error while waiting for OTP email:", e)
+
+        if otp:
+            try:
+                for i, digit in enumerate(otp, start=1):
+                    page2.fill(f"#otp{i}", digit)
+
+                page2.click("input[type='submit']")  # Adjust if needed
+                print("Signup process automated successfully!")
+
+            except Exception as e:
+                print("Failed to enter OTP.")
+                print(f"Error: {e}")
+        else:
+            print("OTP not found, signup aborted.")
+
         browser.close()
 
 # Run the function

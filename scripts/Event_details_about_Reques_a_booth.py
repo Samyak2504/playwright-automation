@@ -117,7 +117,7 @@ def get_temp_email_and_otp():
                     print("Error while selecting location:", e)
 
                 # Fill Mobile
-                page2.locator('//input[@placeholder="Mobile"]').fill("9529765526")
+                page2.locator('//input[@placeholder="Mobile"]').fill("9329765526")
 
                 # Submit form
                 page2.locator('//input[@value="Finish"]').click()
