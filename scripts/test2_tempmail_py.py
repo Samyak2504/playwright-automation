@@ -15,7 +15,14 @@ def get_temp_email_and_otp():
         page.goto("https://temp-mail.org/en/")
         time.sleep(5)
 
-        temp_email = page.locator("input#mail").input_value()
+        try:
+            page.wait_for_selector("input#mail", timeout=15000)
+            temp_email = page.locator("input#mail").input_value()
+        except Exception as e:
+            print("❌ Could not locate temp email input:", e)
+            page.screenshot(path="temp_email_error.png")
+            raise
+
         print(f"Temporary Email: {temp_email}")
 
         page2 = context.new_page()
