@@ -35,7 +35,7 @@ def get_temp_email_and_otp():
         # Handle failure: take screenshot
         if not temp_email:
             print(" Temp email input never loaded or remained 'Loading'. Taking screenshot.")
-            page.screenshot(path="temp_email_error.png", full_page=True)
+            page.screenshot(path="logs/temp_email_error.png", full_page=True)
             raise TimeoutError("Could not fetch temp email in time.")
 
         print(f"Temporary Email: {temp_email}")
