@@ -9,34 +9,42 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-test2-script:
+  run-scripts:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
 
-      - name: Install dependencies
-        run: |
-          pip install playwright
-          playwright install
+    - name: Install dependencies
+      run: |
+        pip install playwright
+        playwright install
 
-      - name: Run test2_tempmail_py.py and save logs
-        run: |
-          mkdir -p logs
-          if ! python scripts/test2_tempmail_py.py >> logs/test2_tempmail_py.log 2>&1; then
-            echo "scripts/test2_tempmail_py.py FAILED" >> logs/failures.txt
-            exit 1
+    - name: Run all scripts one by one and collect errors
+      run: |
+        mkdir -p logs
+        failed=0
+        for file in scripts/*.py; do
+          echo "Running $file"
+          if ! python "$file" >> logs/$(basename "$file").log 2>&1; then
+            echo "$file FAILED" >> logs/failures.txt
+            failed=1
           fi
+        done
+        if [ $failed -eq 1 ]; then
+          echo "Some scripts failed. See logs/failures.txt"
+          exit 1
+        fi
 
-      - name: Upload logs and screenshots
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: debug-artifacts
-          path: logs/
+    - name: Upload logs as artifact
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: script-logs
+        path: logs/
