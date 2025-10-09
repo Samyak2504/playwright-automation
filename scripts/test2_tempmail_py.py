@@ -1,4 +1,4 @@
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, TimeoutError
 import re
 import time
 
@@ -15,34 +15,36 @@ def get_temp_email_and_otp():
         page.goto("https://temp-mail.org/en/")
         time.sleep(5)
 
-        try:
-            # Wait until the temp email is actually set and not "Loading"
-            page.wait_for_function(
-                "() => document.querySelector('#mail')?.value && document.querySelector('#mail').value !== 'Loading'",
-                timeout=20000)
-            temp_email = page.locator("input#mail").input_value()
-            print(f"✅ Temporary Email fetched: {temp_email}")
-        except Exception as e:
-            print("❌ Could not retrieve a valid temp email:", e)
-            page.screenshot(path="temp_email_error.png")
-            raise
+        # Wait for temp email to load (polling for 30s)
+        max_wait_seconds = 30
+        temp_email = None
 
-        # try:
-        #     page.wait_for_selector("input#mail", timeout=15000)
-        #     temp_email = page.locator("input#mail").input_value()
-        # except Exception as e:
-        #     print("❌ Could not locate temp email input:", e)
-        #     page.screenshot(path="temp_email_error.png")
-        #     raise
+        for i in range(max_wait_seconds):
+            try:
+                value = page.locator("input#mail").input_value()
+                if value and value.strip().lower() != "loading":
+                    temp_email = value.strip()
+                    print(f"✅ Temporary Email fetched: {temp_email}")
+                    break
+            except Exception:
+                pass
+            time.sleep(1)
+
+        if not temp_email:
+            print("❌ Temp email input never loaded or remained as 'Loading'")
+            page.screenshot(path="temp_email_error.png")
+            raise TimeoutError("Could not fetch temp email in time.")
 
         print(f"Temporary Email: {temp_email}")
 
+        # Open the event registration page
         page2 = context.new_page()
         page2.goto("https://10times.com/event/928626")
         page2.locator('//span[@data-param="going" and normalize-space(text())="Going"]').click()
         page2.get_by_placeholder("Email").click()
         page2.fill("input[name='email1']", temp_email)
-        # ✅ Check if checkbox exists and is visible, click if so
+
+        # Handle checkbox
         try:
             checkbox = page2.locator("//*[contains(@class, 'server_check_box') and @role='button']")
             if checkbox.is_visible():
@@ -53,19 +55,18 @@ def get_temp_email_and_otp():
         except Exception as e:
             print(f"⚠ Checkbox not found or error occurred: {e}")
 
-        # ✅ Click the submit button
+        # Submit the form
         page2.click("input[type='submit']")
         print("➡ Submit button clicked after handling checkbox.")
 
+        # Wait for OTP email
         page.bring_to_front()
-
         otp = None
         try:
             page.wait_for_selector("text=mail@10times.com", timeout=30000)
             page.locator("text=mail@10times.com").first.click()
             time.sleep(3)
 
-            # Get OTP from the subject div h4
             page.wait_for_selector("div.user-data-subject h4")
             otp_text = page.locator("div.user-data-subject h4").text_content()
             print("OTP text raw:", otp_text)
@@ -80,6 +81,7 @@ def get_temp_email_and_otp():
         except Exception as e:
             print("Error while waiting for OTP email:", e)
 
+        # Continue if OTP was found
         if otp:
             try:
                 for i, digit in enumerate(otp, start=1):
@@ -139,25 +141,24 @@ def get_temp_email_and_otp():
                         page2.wait_for_timeout(500)
                         page2.keyboard.press("Enter")
 
-                    # blur to prevent selection override
                     location_input.evaluate("el => el.blur()")
                     page2.wait_for_timeout(1000)
 
                 except Exception as e:
                     print("Error while selecting location:", e)
 
-                # Fill Mobile
+                # Fill Mobile Number
                 page2.locator('//input[@placeholder="Mobile"]').fill("9029765526")
 
-                # Submit form
+                # Final submit
                 page2.locator('//input[@value="Finish"]').click()
                 print("Form submitted successfully.")
 
-                print("Signup process automated successfully!")
+                print("✅ Signup process automated successfully!")
             except Exception as e:
-                print("Failed to enter OTP:", e)
+                print("❌ Failed to enter OTP or complete signup:", e)
         else:
-            print("OTP not found, signup aborted.")
+            print("❌ OTP not found, signup aborted.")
 
         browser.close()
 
