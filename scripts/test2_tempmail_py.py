@@ -15,27 +15,31 @@ def get_temp_email_and_otp():
         page.goto("https://temp-mail.org/en/")
         time.sleep(5)
 
-        # Wait for temp email to load (polling for 30s)
+        # Wait for temp email input value to appear
         max_wait_seconds = 30
         temp_email = None
 
+        print(" Waiting for temp email input to be ready...")
         for i in range(max_wait_seconds):
             try:
                 value = page.locator("input#mail").input_value()
+                print(f"[{i+1}s] Input value: {value!r}")
                 if value and value.strip().lower() != "loading":
                     temp_email = value.strip()
                     print(f"✅ Temporary Email fetched: {temp_email}")
                     break
-            except Exception:
-                pass
+            except Exception as poll_error:
+                print(f"[{i+1}s] Poll error: {poll_error}")
             time.sleep(1)
 
+        # Handle failure: take screenshot
         if not temp_email:
-            print("❌ Temp email input never loaded or remained as 'Loading'")
-            page.screenshot(path="temp_email_error.png")
+            print(" Temp email input never loaded or remained 'Loading'. Taking screenshot.")
+            page.screenshot(path="temp_email_error.png", full_page=True)
             raise TimeoutError("Could not fetch temp email in time.")
 
         print(f"Temporary Email: {temp_email}")
+
 
         # Open the event registration page
         page2 = context.new_page()
