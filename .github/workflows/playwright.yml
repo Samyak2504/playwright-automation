@@ -9,35 +9,34 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-scripts:
+  run-test2-script:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
 
-    - name: Install dependencies
-      run: |
-        pip install playwright
-        playwright install
+      - name: Install dependencies
+        run: |
+          pip install playwright
+          playwright install
 
-    - name: Run only test2_tempmail_py.py
-      run: |
-        mkdir -p logs
-        echo "Running test2_tempmail_py.py"
-        if ! python scripts/test2_tempmail_py.py >> logs/test2_tempmail_py.log 2>&1; then
-          echo "test2_tempmail_py.py FAILED" >> logs/failures.txt
-          exit 1
-        fi
+      - name: Run test2_tempmail_py.py and save logs
+        run: |
+          mkdir -p logs
+          if ! python scripts/test2_tempmail_py.py >> logs/test2_tempmail_py.log 2>&1; then
+            echo "scripts/test2_tempmail_py.py FAILED" >> logs/failures.txt
+            exit 1
+          fi
 
-    - name: Upload logs as artifact
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: script-logs
-        path: logs/
+      - name: Upload logs and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-artifacts
+          path: logs/
