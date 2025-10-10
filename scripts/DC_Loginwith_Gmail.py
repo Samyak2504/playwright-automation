@@ -29,8 +29,8 @@ def get_temp_email_and_otp():
         time.sleep(5)
 
         page2 = context.new_page()
-        page2.goto("https://10times.com/event/928626")
-        page2.locator("//span[contains(@class, 'action-save') and contains(text(), 'Save')]").click()
+        page2.goto("https://10times.com/")
+        page2.get_by_role("button", name="Login").click()
         page2.locator("//div[@data-name='gLogin']").click()
         time.sleep(30)
 

@@ -140,6 +140,46 @@ def get_temp_email_and_otp():
         else:
             print("OTP not found, signup aborted.")
 
+        # Wait before reload
+        page2.wait_for_timeout(3000)
+
+        try:
+            page2.goto("https://10times.com/top100", timeout=60000, wait_until="domcontentloaded")
+        except Exception as e:
+            print(f" First attempt failed: {e}")
+            page2.wait_for_timeout(3000)
+            try:
+                page2.goto("https://10times.com/top100", timeout=60000, wait_until="domcontentloaded")
+                print(" Retried Top100 page load successfully.")
+            except Exception as e:
+                print(f"⚠ Still failed to load Top100 page: {e}")
+                browser.close()
+                return
+
+        # Scroll to ensure dynamic content loads
+        page2.mouse.move(10, 10)
+        page2.wait_for_timeout(3000)
+
+        # Click "Interested"
+        try:
+            interested = page2.locator('(//span[contains(@class, "action") and normalize-space(text())="Interested"])[1]')
+            interested.scroll_into_view_if_needed()
+            interested.wait_for(state="visible", timeout=10000)
+            interested.click()
+            print("✔ Clicked on 'Interested' successfully.")
+        except Exception as e:
+            print(f"⚠ Failed to click 'Interested': {e}")
+            page2.screenshot(path="interested_error.png", full_page=True)
+
+        # Close modal
+        try:
+            close_button = page2.locator("//button[contains(@class, 'btn-close') and @aria-label='close']")
+            close_button.wait_for(state="attached", timeout=5000)
+            close_button.click()
+            print("✔ Modal closed successfully.")
+        except Exception as e:
+            print(f"⚠ Failed to close modal: {e}")
+
         browser.close()
 
 if __name__ == "__main__":
