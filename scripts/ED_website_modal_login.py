@@ -27,21 +27,15 @@ def get_temp_email_and_otp():
         page.locator("//input[@aria-label='Enter your password']").fill("Samyak@1998")
         page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
         time.sleep(5)
-        print("✅ Password field filled successfully!")
 
         page2 = context.new_page()
         page2.goto("https://10times.com/event/928626")
-        page2.locator("//span[@id='orgConnectBtn' and contains(text(),'Contact')]").click()
+        page2.locator("//span[@id='eventWebsiteBtn' and normalize-space(text())='Website']").click()
         page2.locator("//span[contains(text(), 'Continue with Google')]").click()
 
-        time.sleep(5)
 
-        page2.locator("//textarea[@id='custom-message']").fill("Hi!")
+        time.sleep(30)
 
-        page2.locator("//span[@id='118']").click()
-        page2.locator("//button[@id='send_btn']").click()
-
-        time.sleep(10)
 
 
         browser.close()
