@@ -12,68 +12,32 @@ def get_temp_email_and_otp():
         )
 
         page = context.new_page()
-        page.goto("https://temp-mail.org/en/")
+        page.goto("https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0%2F&dsh=S19276807%3A1760080489828412&emr=1&followup=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0%2F&ifkv=AfYwgwXM93X1KSMmQbIViupG4RT0-W7pozpYpvQXeQ6ge904nOmlBue32q4ctptZlWj86AOXcIdwSQ&osid=1&passive=1209600&service=mail&flowName=GlifWebSignIn&flowEntry=ServiceLogin")
         time.sleep(5)
 
-        temp_email = page.locator("input#mail").input_value()
-        print(f"Temporary Email: {temp_email}")
+        # Wait
+        email_input = page.locator('//input[@id="identifierId"]')
+        email_input.wait_for(timeout=10000)
+        email_input.fill("Samyak@10times.com")
+        print("✅ Email field filled successfully!")
+
+        page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
+        time.sleep(5)
+
+        page.locator("//input[@aria-label='Enter your password']").fill("Samyak@1998")
+        page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
+        time.sleep(5)
+        print("✅ Password field filled successfully!")
 
         page2 = context.new_page()
         page2.goto("https://10times.com/profile/amar-louni-70833003")
         page2.get_by_role("button", name="Login").click()
-        page2.get_by_placeholder("Email").click()
-        page2.fill("input[name='email1']", temp_email)
-        # ✅ Check if checkbox exists and is visible, click if so
-        try:
-            checkbox = page2.locator("//*[contains(@class, 'server_check_box') and @role='button']")
-            if checkbox.is_visible():
-                checkbox.click()
-                print("✔ Checkbox clicked.")
-            else:
-                print("⚠ Checkbox not visible.")
-        except Exception as e:
-            print(f"⚠ Checkbox not found or error occurred: {e}")
 
-        # ✅ Click the submit button
-        page2.click("input[type='submit']")
-        print("➡ Submit button clicked after handling checkbox.")
+        page2.locator("//span[contains(text(), 'Continue with Google')]").click()
 
-        page.bring_to_front()
-
-        otp = None
-        try:
-            page.wait_for_selector("text=mail@10times.com", timeout=30000)
-            page.locator("text=mail@10times.com").first.click()
-            time.sleep(3)
-
-            # Get OTP from the subject div h4
-            page.wait_for_selector("div.user-data-subject h4")
-            otp_text = page.locator("div.user-data-subject h4").text_content()
-            print("OTP text raw:", otp_text)
-
-            otp_match = re.search(r'\b(\d{4,6})\b', otp_text)
-            if otp_match:
-                otp = otp_match.group(1)
-                print(f"Extracted OTP: {otp}")
-            else:
-                print("OTP not found!")
-
-        except Exception as e:
-            print("Error while waiting for OTP email:", e)
-
-        if otp:
-            try:
-                for i, digit in enumerate(otp, start=1):
-                    page2.fill(f"#otp{i}", digit)
-                page2.click("input[type='submit']")
-                print("Signup process automated successfully!")
-            except Exception as e:
-                print("Failed to enter OTP:", e)
-        else:
-            print("OTP not found, signup aborted.")
+        time.sleep(10)
 
         browser.close()
 
 if __name__ == "__main__":
     get_temp_email_and_otp()
-
