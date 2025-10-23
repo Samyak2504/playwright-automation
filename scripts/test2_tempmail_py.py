@@ -29,14 +29,7 @@ def get_temp_email_and_otp():
         time.sleep(5)
 
         page2 = context.new_page()
-        page2.goto("https://10times.com/events")
-
-        page2.evaluate("window.scrollBy(0, 450);")
-        time.sleep(2)
-
-        page2.locator("//span[normalize-space()='Education & Training']")
-        time.sleep(2)
-
+        page2.goto("https://10times.com/top100")
         page2.locator("(//span[@class='action' and text()='Interested'])[1]").click()
         page2.locator("//span[contains(text(), 'Continue with Google')]").click()
 
