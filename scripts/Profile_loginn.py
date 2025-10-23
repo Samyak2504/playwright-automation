@@ -30,19 +30,12 @@ def get_temp_email_and_otp():
         print("✅ Password field filled successfully!")
 
         page2 = context.new_page()
-        page2.goto("https://10times.com/event/928626")
-        page2.locator("//span[@id='orgConnectBtn' and contains(text(),'Contact')]").click()
+        page2.goto("https://10times.com/profile/amar-louni-70833003")
+        page2.get_by_role("button", name="Login").click()
+
         page2.locator("//span[contains(text(), 'Continue with Google')]").click()
 
-        time.sleep(5)
-
-        page2.locator("//textarea[@id='custom-message']").fill("Hi!")
-
-        page2.locator("//span[@id='118']").click()
-        page2.locator("//button[@id='send_btn']").click()
-
         time.sleep(10)
-
 
         browser.close()
 
