@@ -34,7 +34,7 @@ def get_temp_email_and_otp():
         page2.evaluate("window.scrollBy(0, 150);")
         time.sleep(2)
 
-        page2.locator("(//span[@class='action' and normalize-space(text())='Interested'])[5]").click()
+        page2.locator("(//span[@class='action' and normalize-space(text())='Interested'])[2]").click()
         page2.locator("//span[contains(text(), 'Continue with Google')]").click()
 
 
