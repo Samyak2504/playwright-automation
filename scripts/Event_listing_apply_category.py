@@ -19,7 +19,7 @@ def get_temp_email_and_otp():
         page.goto("https://10times.com/events")
 
         # ✅ Slight scroll to load filters (scroll just 300px)
-        page.evaluate("window.scrollBy(0, 300);")
+        page.evaluate("window.scrollBy(0, 350);")
         time.sleep(2)  # Wait for content to load
 
         # ✅ Use exact XPath to click "Education & Training" filter
