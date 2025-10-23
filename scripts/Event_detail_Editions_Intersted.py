@@ -31,8 +31,9 @@ def get_temp_email_and_otp():
 
         page2 = context.new_page()
         page2.goto("https://10times.com/event/928626")
+        page2.locator('//span[@onclick="openEditions(this,\'3731676\',\'2\',\'\',\'0\');"]').click()
 
-        page2.locator("(//button[normalize-space(text())='Sign In to View'])[1]").click()
+        page2.locator("(//button[normalize-space(text())='Interested'])[1]").click()
 
         page2.locator("//span[contains(text(), 'Continue with Google')]").click()
 
