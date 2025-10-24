@@ -33,7 +33,7 @@ def get_temp_email_and_otp():
         page2.goto("https://10times.com/profile/amar-louni-70833003")
         page2.locator("//button[normalize-space(text())='Log in']").click()
 
-        page2.locator("//span[contains(text(), 'Continue with Google')]").click()
+        page2.locator("//div[contains(@class, 'social_button') and contains(text(), 'Continue with Google')]").click()
         print(" User login ")
 
         time.sleep(10)
