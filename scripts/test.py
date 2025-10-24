@@ -19,17 +19,18 @@ def get_temp_email_and_otp():
         email_input = page.locator('//input[@id="identifierId"]')
         email_input.wait_for(timeout=10000)
         email_input.fill("Samyak@10times.com")
-        print("✅ Email field filled successfully!")
+        print(" Email field filled successfully!")
 
         page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
         time.sleep(5)
 
         page.locator("//input[@aria-label='Enter your password']").fill("Samyak@1998")
         page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
+        print(" Password field filled successfully!")
         time.sleep(5)
 
         page2 = context.new_page()
-        page2.goto("https://10times.com/venues/gaylord-national-resort-convention-center")
+        page2.goto("https://10times.com/events")
         page2.get_by_role("button", name="Login").click()
         page2.locator("//div[@data-name='gLogin']").click()
         time.sleep(30)
