@@ -18,6 +18,7 @@ def collect_top100_event_links():
 
         page.locator("//a[@aria-label='1' and normalize-space(text())='1']").click()
         print("Event redirect")
+        time.sleep(5)
 
         browser.close()
 
