@@ -1,4 +1,5 @@
 from playwright.sync_api import sync_playwright, TimeoutError
+import time
 
 def collect_top100_event_links():
     with sync_playwright() as p:
