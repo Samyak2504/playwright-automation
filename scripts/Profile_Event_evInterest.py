@@ -38,17 +38,7 @@ def get_temp_email_and_otp():
         page3.wait_for_load_state("domcontentloaded")
         print(" Switched to Event tab")
 
-        # --- STEP 4: Click 'Connect' button on the Event page ---
-        page3.wait_for_selector("//button[normalize-space()='Connect']", timeout=10000)
-        page3.locator("//button[normalize-space()='Connect']").click()
-        print(" Clicked 'Connect' button")
-
-        # --- STEP 5: Click 'Continue with Google' ---
-        page3.wait_for_selector("//div[contains(@class, 'social_button') and contains(text(), 'Continue with Google')]")
-        page3.locator("//div[contains(@class, 'social_button') and contains(text(), 'Continue with Google')]").click()
-        print(" Clicked 'Continue with Google'")
-
-        time.sleep(20)
+        time.sleep(10)
         browser.close()
 
 
