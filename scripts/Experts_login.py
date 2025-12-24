@@ -34,22 +34,6 @@ def get_temp_email_and_otp():
         page2.locator("//div[@data-name='gLogin']").click()
         time.sleep(10)
 
-        #  Use exact XPath to click 1st "London" filter
-        locator = page2.locator("//a[normalize-space()='London']")
-        locator.first.click()  # Use .first in case of duplicates
-
-        #  Wait after click
-        time.sleep(2)
-
-        #  Use exact XPath to click 2nd  filter
-        locator = page2.locator("//a[normalize-space()='Education & Training']")
-        locator.first.click()  # Use .first in case of duplicates
-
-        #  Wait after click
-        time.sleep(2)
-
-        page2.locator("(//button[@aria-label='follow'])[1]").click()
-        time.sleep(30)
 
 
         browser.close()

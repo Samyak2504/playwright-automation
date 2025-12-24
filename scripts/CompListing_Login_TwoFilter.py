@@ -5,7 +5,7 @@ import time
 
 def get_temp_email_and_otp():
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=False, slow_mo=1000)
+        browser = p.firefox.launch(headless=True, slow_mo=1000)
         custom_user_agent = "TenTimes internal Testing/tentimestesting10t112"
         context = browser.new_context(
             user_agent=custom_user_agent,
@@ -47,19 +47,6 @@ def get_temp_email_and_otp():
         locator = page2.locator("(//a[normalize-space()='Education & Training'])[1]")
         locator.first.click()  # Use .first in case of duplicates
         time.sleep(20)
-
-        #  Use exact XPath to click 3rd filter
-        locator = page2.locator("//a[normalize-space()='less than 10']")
-        locator.first.click()  # Use .first in case of duplicates
-        time.sleep(20)
-
-        #  Use exact XPath to click 4th filter
-        locator = page2.locator("//a[normalize-space()='50+']")
-        locator.first.click()  # Use .first in case of duplicates
-        time.sleep(20)
-
-        page2.locator("(//span[normalize-space()='Follow'])[1]").click()
-        time.sleep(30)
 
 
         browser.close()

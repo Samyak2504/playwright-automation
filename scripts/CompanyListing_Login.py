@@ -29,27 +29,11 @@ def get_temp_email_and_otp():
         time.sleep(5)
 
         page2 = context.new_page()
-        page2.goto("https://10times.com/experts")
+        page2.goto("https://10times.com/company")
         page2.get_by_role("button", name="Login").click()
         page2.locator("//div[@data-name='gLogin']").click()
         time.sleep(10)
 
-        #  Use exact XPath to click 1st "London" filter
-        locator = page2.locator("//a[normalize-space()='London']")
-        locator.first.click()  # Use .first in case of duplicates
-
-        #  Wait after click
-        time.sleep(2)
-
-        #  Use exact XPath to click 2nd  filter
-        locator = page2.locator("//a[normalize-space()='Education & Training']")
-        locator.first.click()  # Use .first in case of duplicates
-
-        #  Wait after click
-        time.sleep(2)
-
-        page2.locator("(//button[@aria-label='follow'])[1]").click()
-        time.sleep(30)
 
 
         browser.close()

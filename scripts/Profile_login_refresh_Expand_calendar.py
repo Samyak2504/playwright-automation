@@ -1,0 +1,52 @@
+from playwright.sync_api import sync_playwright
+import time
+
+def get_temp_email_and_otp():
+    with sync_playwright() as p:
+        browser = p.firefox.launch(headless=True, slow_mo=800)
+        custom_user_agent = "TenTimes internal Testing/tentimestesting10t112"
+        context = browser.new_context(
+            user_agent=custom_user_agent,
+            extra_http_headers={"User-Agent": custom_user_agent}
+        )
+
+        # --- STEP 1: Login to Gmail ---
+        page = context.new_page()
+        page.goto("https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Fmail.google.com%2Fmail%2F&dsh=S354686971%3A1761497156648717&ifkv=ARESoU0qmqppoC3UIBVFO5kmjaQouD9hvAamE5YlKMBKACKKhrXo9V3bRcIyn8_quzm2WA2qXtqT4g&rip=1&sacu=1&service=mail&flowName=GlifWebSignIn&flowEntry=ServiceLogin")
+        page.wait_for_selector('//input[@id="identifierId"]')
+        page.fill('//input[@id="identifierId"]', "Samyak@10times.com")
+        page.click("//span[text()='Next']")
+        time.sleep(4)
+
+        page.wait_for_selector("//input[@aria-label='Enter your password']")
+        page.fill("//input[@aria-label='Enter your password']", "Samyak@1998")
+        page.click("//span[text()='Next']")
+        time.sleep(6)
+        print(" Logged into Gmail successfully!")
+
+        # --- STEP 2: Open profile page ---
+        page2 = context.new_page()
+        page2.goto("https://10times.com/profile/amar-louni-70833003")
+        page2.locator("//button[normalize-space(text())='Log in']").click()
+
+        page2.locator("//div[contains(@class, 'social_button') and contains(text(), 'Continue with Google')]").click()
+        print(" User login ")
+        time.sleep(10)
+
+        # Refresh the page
+        page2.reload()
+        print("Page refreshed")
+
+        # Optional: wait a bit to observe the refreshed page
+        time.sleep(15)
+
+        # STEP 3: Expand the calendar
+
+        page2.locator("//button[normalize-space(.)='Expand']").click()
+        print("Expand the calendar")
+        time.sleep(5)
+        browser.close()
+
+
+if __name__ == "__main__":
+    get_temp_email_and_otp()
