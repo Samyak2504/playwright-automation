@@ -1,11 +1,10 @@
 from playwright.sync_api import sync_playwright
-import re
-import time
 
 
-def get_temp_email_and_otp():
+def add_event_10times():
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=False, slow_mo=1000)
+        # Launch browser
+        browser = p.firefox.launch(headless=True, slow_mo=500)
         custom_user_agent = "TenTimes internal Testing/tentimestesting10t112"
         context = browser.new_context(
             user_agent=custom_user_agent,
@@ -26,44 +25,54 @@ def get_temp_email_and_otp():
         page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
         time.sleep(5)
 
-        page.locator("//input[@aria-label='Enter your password']").fill("Samyak@1998")
+        page.locator("//input[@aria-label='Enter your password']").fill("Samyak@2512")
         page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
         time.sleep(5)
 
+        # Wait for redirect back to 10times login
         page2 = context.new_page()
-        page2.goto("https://10times.com/company")
+        page2.goto("https://10times.com")
         page2.get_by_role("button", name="Login").click()
         page2.locator("//div[@data-name='gLogin']").click()
         time.sleep(10)
+        print(" Google login successful!")
 
-        #  Use exact XPath to click 1st "London" filter
-        locator = page2.locator("//a[normalize-space()='London']")
-        locator.first.click()  # Use .first in case of duplicates
+        # -----------------------------
+        # Step 2: Navigate to Add Event Page
+        # -----------------------------
+        page.goto("https://10times.com/dashboard/addevent")
+        page.wait_for_selector("//textarea[@placeholder='Event Name']", timeout=15000)
 
-        #  Wait after click
-        time.sleep(2)
+        # -----------------------------
+        # Step 3: Fill Event Name & Type
+        # -----------------------------
+        page.fill("//textarea[@placeholder='Event Name']", "Samyak New")
+        page.locator("//span[text()='Tradeshow']").click()
 
-        #  Use exact XPath to click 2nd filter
-        locator = page2.locator("(//a[normalize-space()='Education & Training'])[1]")
-        locator.first.click()  # Use .first in case of duplicates
-        time.sleep(20)
+        # -----------------------------
+        # Step 4: Add Event Location
+        # -----------------------------
+        page.locator("//div[text()='Add Event Location']").click()
+        page.fill("//input[contains(@placeholder,'Enter location')]", "noida")
+        page.locator("(//span[contains(text(),'Noida')])[1]").click()
 
-        #  Use exact XPath to click 3rd filter
-        locator = page2.locator("//a[normalize-space()='less than 10']")
-        locator.first.click()  # Use .first in case of duplicates
-        time.sleep(20)
+        # -----------------------------
+        # Step 5: Add Description
+        # -----------------------------
+        page.locator("(//div[normalize-space()='Add Description'])[1]").click()
+        page.fill("(//div[@data-placeholder='Write something...'])[1]", "This is new Event")
+        page.locator("(//span[contains(text(),'Save changes')])[1]").click()
 
-        #  Use exact XPath to click 4th filter
-        locator = page2.locator("//a[normalize-space()='50+']")
-        locator.first.click()  # Use .first in case of duplicates
-        time.sleep(20)
+        # -----------------------------
+        # Step 6: Add to Calendar
+        # -----------------------------
+        page.locator("//button[normalize-space()='Add to calendar']").click()
 
-        page2.locator("(//span[normalize-space()='Follow'])[1]").click()
-        time.sleep(30)
+        print(" Event added successfully!")
 
-
+        # Close browser
         browser.close()
 
 
 if __name__ == "__main__":
-    get_temp_email_and_otp()
+    add_event_10times()

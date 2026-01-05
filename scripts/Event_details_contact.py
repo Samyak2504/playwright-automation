@@ -24,7 +24,7 @@ def get_temp_email_and_otp():
         page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
         time.sleep(5)
 
-        page.locator("//input[@aria-label='Enter your password']").fill("Samyak@1998")
+        page.locator("//input[@aria-label='Enter your password']").fill("Samyak@2512")
         page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
         time.sleep(5)
         print("✅ Password field filled successfully!")

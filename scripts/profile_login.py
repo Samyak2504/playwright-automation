@@ -4,7 +4,7 @@ import time
 
 def get_temp_email_and_otp():
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=True, slow_mo=1000)
+        browser = p.firefox.launch(headless=False, slow_mo=1000)
         custom_user_agent = "TenTimes internal Testing/tentimestesting10t112"
         context = browser.new_context(
             user_agent=custom_user_agent,
@@ -24,7 +24,7 @@ def get_temp_email_and_otp():
         page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
         time.sleep(5)
 
-        page.locator("//input[@aria-label='Enter your password']").fill("Samyak@1998")
+        page.locator("//input[@aria-label='Enter your password']").fill("Samyak@2512")
         page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
         time.sleep(5)
         print(" Password field filled successfully!")

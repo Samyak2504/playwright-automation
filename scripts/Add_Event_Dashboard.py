@@ -5,7 +5,7 @@ import time
 
 def get_temp_email_and_otp():
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=True, slow_mo=1000)
+        browser = p.firefox.launch(headless=False, slow_mo=1000)
         custom_user_agent = "TenTimes internal Testing/tentimestesting10t112"
         context = browser.new_context(
             user_agent=custom_user_agent,
@@ -31,27 +31,38 @@ def get_temp_email_and_otp():
         time.sleep(5)
 
         page2 = context.new_page()
-        page2.goto("https://10times.com/company")
+        page2.goto("https://10times.com")
         page2.get_by_role("button", name="Login").click()
         page2.locator("//div[@data-name='gLogin']").click()
         time.sleep(10)
 
-        #  Use exact XPath to click 1st "London" filter
-        locator = page2.locator("//a[normalize-space()='London']")
-        locator.first.click()  # Use .first in case of duplicates
+        page2.goto("https://10times.com/dashboard/addevent")
+        page2.locator("//textarea[@placeholder='Event Name']").fill("Samyak New")
+        page2.locator("//span[text()='Tradeshow']").click()
+        time.sleep(10)
 
-        #  Wait after click
-        time.sleep(2)
+        # Add event location
+        page2.locator("//div[text()='Add Event Location']").click()
 
-        #  Use exact XPath to click 2nd filter
-        locator = page2.locator("(//a[normalize-space()='Education & Training'])[1]")
-        locator.first.click()  # Use .first in case of duplicates
-        time.sleep(20)
+        location_input = page2.locator("//input[contains(@placeholder,'Enter location')]")
+        location_input.click()
+        location_input.type("noida", delay=100)  # triggers autocomplete
 
-        #  Use exact XPath to click 3rd filter
-        locator = page2.locator("//a[normalize-space()='less than 10']")
-        locator.first.click()  # Use .first in case of duplicates
-        time.sleep(20)
+        # Wait for suggestions and click the first match
+        suggestion = page2.locator("(//span[contains(text(),'Noida')])[1]")
+        suggestion.wait_for(timeout=5000)
+        suggestion.click()
+
+        #  Add your description
+        page2.locator("(//div[normalize-space()='Add Description'])[1]").click()
+        page2.locator("(//div[@data-placeholder='Write something...'])[1]").fill("This is new Event")
+        page2.locator("(//span[contains(text(),'Save changes')])[1]").click()
+        time.sleep(5)
+
+        #  Click on the "Add to calendar" button
+        page2.locator("//button[normalize-space()='Add to calendar']").click()
+        time.sleep(10)
+
 
         browser.close()
 
