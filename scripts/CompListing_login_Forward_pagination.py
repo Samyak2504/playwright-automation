@@ -4,7 +4,7 @@ import time
 
 def get_temp_email_and_otp():
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=False, slow_mo=1000)
+        browser = p.firefox.launch(headless=True, slow_mo=1000)
         custom_user_agent = "TenTimes internal Testing/tentimestesting10t112"
         context = browser.new_context(
             user_agent=custom_user_agent,
@@ -34,11 +34,8 @@ def get_temp_email_and_otp():
         page2.locator("//div[@data-name='gLogin']").click()
         print("User login successfully!")
 
-        page2.locator("(//span[@onclick='getCompanyPageData(2)'])[1]").click()
+        page2.locator("(//span[@onclick='getCompanyPageData(3)'])[1]").click()
         print("User goes to redirect to next pagination")
-
-        page2.locator("(//span[normalize-space()='Follow'])[1]").click()
-        print("User intent to the company page")
 
         time.sleep(10)
 
