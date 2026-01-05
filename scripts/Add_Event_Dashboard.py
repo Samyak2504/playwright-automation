@@ -5,7 +5,7 @@ import time
 
 def get_temp_email_and_otp():
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=False, slow_mo=1000)
+        browser = p.firefox.launch(headless=True, slow_mo=1000)
         custom_user_agent = "TenTimes internal Testing/tentimestesting10t112"
         context = browser.new_context(
             user_agent=custom_user_agent,
@@ -45,13 +45,28 @@ def get_temp_email_and_otp():
         page2.locator("//div[text()='Add Event Location']").click()
 
         location_input = page2.locator("//input[contains(@placeholder,'Enter location')]")
+        location_input.wait_for(state="visible", timeout=10000)
         location_input.click()
-        location_input.type("noida", delay=100)  # triggers autocomplete
+
+        # Type like a real user
+        page2.keyboard.type("noida")
+
+        page2.locator(
+            "//div[contains(@class,'max-h') and contains(@class,'overflow-y-auto')]"
+        ).wait_for(timeout=10000)
+
+        # Click first Noida suggestion
+        page2.locator(
+            "//div[contains(@class,'cursor-pointer') and .//span[normalize-space()='Noida,']]"
+        ).first.click()
+
+        # Wait for suggestions
+        page2.wait_for_timeout(3000)
 
         # Wait for suggestions and click the first match
-        suggestion = page2.locator("(//span[contains(text(),'Noida')])[1]")
-        suggestion.wait_for(timeout=5000)
-        suggestion.click()
+        #suggestion = page2.locator("(//span[contains(text(),'Noida')])[1]")
+        # suggestion.wait_for(timeout=5000)
+        #suggestion.click()
 
         #  Add your description
         page2.locator("(//div[normalize-space()='Add Description'])[1]").click()
