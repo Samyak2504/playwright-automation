@@ -26,19 +26,25 @@ def get_temp_email_and_otp():
 
         # --- STEP 2: Open profile page ---
         page2 = context.new_page()
-        page2.goto("https://10times.com/profile/amar-louni-70833003")
-        page2.locator("//button[normalize-space(text())='Log in']").click()
-
-        page2.locator("//div[contains(@class, 'social_button') and contains(text(), 'Continue with Google')]").click()
+        page2.goto("https://10times.com")
+        page2.get_by_role("button", name="Login").click()
+        page2.locator("//div[@data-name='gLogin']").click()
         print(" User login ")
         time.sleep(10)
+
+        page2.goto("https://10times.com/profile/samyak-kumar-63085990?olk")
+
+        # Slight scroll to load filters (scroll just 300px)
+        page2.evaluate("window.scrollBy(0, 100);")
+        print(" User login ")
+        time.sleep(5)
 
         # Refresh the page
         page2.reload()
         print("Page refreshed")
 
         # Optional: wait a bit to observe the refreshed page
-        time.sleep(15)
+        time.sleep(10)
 
         # STEP 3: Expand the calendar
 

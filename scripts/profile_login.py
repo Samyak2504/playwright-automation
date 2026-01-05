@@ -4,7 +4,7 @@ import time
 
 def get_temp_email_and_otp():
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=False, slow_mo=1000)
+        browser = p.firefox.launch(headless=True, slow_mo=1000)
         custom_user_agent = "TenTimes internal Testing/tentimestesting10t112"
         context = browser.new_context(
             user_agent=custom_user_agent,
@@ -30,11 +30,17 @@ def get_temp_email_and_otp():
         print(" Password field filled successfully!")
 
         page2 = context.new_page()
-        page2.goto("https://10times.com/profile/amar-louni-70833003")
-        page2.locator("//button[normalize-space(text())='Log in']").click()
-
-        page2.locator("//div[contains(@class, 'social_button') and contains(text(), 'Continue with Google')]").click()
+        page2.goto("https://10times.com")
+        page2.get_by_role("button", name="Login").click()
+        page2.locator("//div[@data-name='gLogin']").click()
         print(" User login ")
+        time.sleep(10)
+
+        page2.goto("https://10times.com/profile/amar-louni-70833003?olk?")
+
+        # Slight scroll to load filters (scroll just 300px)
+        page2.evaluate("window.scrollBy(0, 100);")
+        time.sleep(2)  # Wait for content to load
 
         time.sleep(10)
 

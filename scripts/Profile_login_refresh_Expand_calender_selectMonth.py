@@ -32,27 +32,29 @@ def get_temp_email_and_otp():
         print(" User login ")
         time.sleep(10)
 
-        page2.goto("https://10times.com/profile/amar-louni-70833003?olk?")
+        page2.goto("https://10times.com/profile/samyak-kumar-63085990?olk")
 
         # Slight scroll to load filters (scroll just 300px)
         page2.evaluate("window.scrollBy(0, 100);")
-        time.sleep(2)  # Wait for content to load
-        print(" Profile page loaded")
+        print(" User login ")
+        time.sleep(5)
 
-        # --- STEP 3: Click on first event (which opens in a new tab) ---
-        with context.expect_page() as new_page_info:
-            page2.locator("(//div[contains(@class, 'dashboardeventcard_style_bigName__')])[1]").click()
-        page3 = new_page_info.value  # This is the new tab (event page)
-        page3.wait_for_load_state("domcontentloaded")
-        print(" Switched to Event tab")
+        # Refresh the page
+        page2.reload()
+        print("Page refreshed")
 
-        # --- STEP 4: Click 'Connect' button on the Event page ---
-        page3.wait_for_selector("//button[normalize-space()='Connect']", timeout=10000)
-        page3.locator("//button[normalize-space()='Connect']").click()
-        print(" Clicked 'Connect' button")
+        # Optional: wait a bit to observe the refreshed page
+        time.sleep(10)
 
+        # STEP 3: Expand the calendar
 
-        time.sleep(20)
+        page2.locator("//button[normalize-space(.)='Expand']").click()
+        print("Expand the calendar")
+
+        page2.locator("(//div[contains(@class,'rounded-full') and contains(@class,'cursor-pointer')])[2]").click()
+        print("Select any Month ")
+
+        time.sleep(5)
         browser.close()
 
 
