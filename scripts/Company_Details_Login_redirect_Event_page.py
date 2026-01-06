@@ -40,6 +40,10 @@ def get_temp_email_and_otp():
 
         page2.locator("//button[@id='event-calendar-link']").click()
         print("User Redirect to the calender section")
+
+        page2.locator("(//tr[@class='box']//h2/a)[1]").click()
+        print(" User Redirect to the Event page ")
+
         time.sleep(5)
 
 

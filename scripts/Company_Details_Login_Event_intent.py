@@ -19,7 +19,7 @@ def get_temp_email_and_otp():
         email_input = page.locator('//input[@id="identifierId"]')
         email_input.wait_for(timeout=10000)
         email_input.fill("Samyak@10times.com")
-        print("✅ Email field filled successfully!")
+        print(" Email field filled successfully!")
 
         page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
         time.sleep(5)
@@ -40,7 +40,12 @@ def get_temp_email_and_otp():
 
         page2.locator("//button[@id='event-calendar-link']").click()
         print("User Redirect to the calender section")
-        time.sleep(5)
+
+        # Intent on the evenet
+        page2.locator("(//button[.//span[normalize-space()='Interested']])[1]").click()
+        page2.locator("(//button[@aria-label='close'])[2]").click()
+        print("User intent on the event")
+        time.sleep(10)
 
 
         browser.close()

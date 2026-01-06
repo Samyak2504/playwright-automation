@@ -38,8 +38,8 @@ def get_temp_email_and_otp():
         page2.goto("https://10times.com/company/the-royal-institution-of-chartered-surveyors")
         time.sleep(5)
 
-        page2.locator("//button[@id='event-calendar-link']").click()
-        print("User Redirect to the calender section")
+        page2.locator("//button[normalize-space()='+ Follow Company']").click()
+        print("User intent on the +Follow company button")
         time.sleep(5)
 
 

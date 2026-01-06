@@ -38,10 +38,15 @@ def get_temp_email_and_otp():
         page2.goto("https://10times.com/company/the-royal-institution-of-chartered-surveyors")
         time.sleep(5)
 
-        page2.locator("//button[@id='event-calendar-link']").click()
-        print("User Redirect to the calender section")
+        page2.locator("//button[@id='companyContactBtn']").click()
+        print("User Contact the company details page")
         time.sleep(5)
 
+        page2.locator("//textarea[@id='custom-message']").fill("Hi!")
+        page2.locator("//button[@id='send_btn']").click()
+        page2.locator("(//button[@aria-label='close'])[2]").click()
+        print("Close the Contact you modal")
+        time.sleep(5)
 
         browser.close()
 

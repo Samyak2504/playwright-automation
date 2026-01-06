@@ -29,18 +29,11 @@ def get_temp_email_and_otp():
         time.sleep(5)
 
         page2 = context.new_page()
-        page2.goto("https://10times.com/company")
+        page2.goto("https://10times.com/company/the-royal-institution-of-chartered-surveyors")
         page2.get_by_role("button", name="Login").click()
         page2.locator("//div[@data-name='gLogin']").click()
-        print("User Login successful")
-        time.sleep(5)
+        time.sleep(10)
 
-        page2.goto("https://10times.com/company/the-royal-institution-of-chartered-surveyors")
-        time.sleep(5)
-
-        page2.locator("//button[@id='event-calendar-link']").click()
-        print("User Redirect to the calender section")
-        time.sleep(5)
 
 
         browser.close()
