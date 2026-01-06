@@ -42,7 +42,7 @@ def get_temp_email_and_otp():
         print("User Follow the company details page")
         time.sleep(5)
 
-        page2.locator("(//button[contains(@class,'btn-close')])[2]").click()
+        page2.locator("(//button[contains(@class,'btn-close')])[1]").click()
         print("Close the thank you modal")
         time.sleep(5)
 
