@@ -34,6 +34,9 @@ def get_temp_email_and_otp():
         page2.locator("//div[@data-name='gLogin']").click()
         time.sleep(10)
 
+        page2.locator("(//button[@data-param='bookmark' and @aria-label='evt_bkmrk'])[1]").click()
+        print("User intent premium event")
+
 
 
         browser.close()
