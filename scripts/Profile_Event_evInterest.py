@@ -19,7 +19,7 @@ def get_temp_email_and_otp():
         time.sleep(4)
 
         page.wait_for_selector("//input[@aria-label='Enter your password']")
-        page.fill("//input[@aria-label='Enter your password']", "Samyak@2512")
+        page.fill("//input[@aria-label='Enter your password']", "Samyak@1998")
         page.click("//span[text()='Next']")
         time.sleep(6)
         print(" Logged into Gmail successfully!")
