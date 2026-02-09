@@ -15,25 +15,42 @@ def get_temp_email_and_otp():
             extra_http_headers={"User-Agent": custom_user_agent}
         )
 
-        # ✅ Open the events page
         page = context.new_page()
-        page.goto("https://10times.com/events", wait_until="networkidle")
+        page.goto(
+            "https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0%2F&dsh=S19276807%3A1760080489828412&emr=1&followup=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0%2F&ifkv=AfYwgwXM93X1KSMmQbIViupG4RT0-W7pozpYpvQXeQ6ge904nOmlBue32q4ctptZlWj86AOXcIdwSQ&osid=1&passive=1209600&service=mail&flowName=GlifWebSignIn&flowEntry=ServiceLogin")
+        time.sleep(5)
+
+        # Wait
+        email_input = page.locator('//input[@id="identifierId"]')
+        email_input.wait_for(timeout=10000)
+        email_input.fill("Samyak@10times.com")
+        print("✅ Email field filled successfully!")
+
+        page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
+        time.sleep(5)
+
+        page.locator("//input[@aria-label='Enter your password']").fill("Samyak@1996")
+        page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
+        time.sleep(5)
+
+        page2 = context.new_page()
+        page2.goto("https://10times.com/events")
         print("✅ Page loaded successfully")
 
         # ✅ Click on “Tradeshows” filter
         try:
-            page.locator("//a[@href='/tradeshows']").click(timeout=10000)
+            page2.locator("//a[@href='/tradeshows']").click(timeout=10000)
             print("✅ Clicked on 'Tradeshows' filter")
         except TimeoutError:
             print("⚠️ Could not find 'Tradeshows' filter")
 
         # ✅ Scroll slightly
-        page.evaluate("window.scrollBy(0, 200)")
+        page2.evaluate("window.scrollBy(0, 200)")
         time.sleep(2)
 
         # ✅ Click “London” filter
         try:
-            london = page.locator("//span[normalize-space()='London']").first
+            london = page2.locator("//span[normalize-space()='London']").first
             london.click(timeout=10000)
             print("✅ Clicked on 'London' filter")
         except TimeoutError:
@@ -41,13 +58,13 @@ def get_temp_email_and_otp():
 
         # ✅ Remove ad iframes before category filters
         print("🧹 Removing Google Ads iframes...")
-        page.evaluate("""
+        page2.evaluate("""
             document.querySelectorAll('iframe, ins.adsbygoogle').forEach(el => el.remove());
         """)
 
         # ✅ Function to click filters safely
         def safe_click(label):
-            locator = page.locator(f"//span[normalize-space()='{label}']").first
+            locator = page2.locator(f"//span[normalize-space()='{label}']").first
             try:
                 locator.click(timeout=10000, force=True)
                 print(f"✅ Clicked '{label}' filter")
@@ -56,7 +73,7 @@ def get_temp_email_and_otp():
                 try:
                     handle = locator.element_handle()
                     if handle:
-                        page.evaluate("(el) => el.click()", handle)
+                        page2.evaluate("(el) => el.click()", handle)
                         print(f"✅ JS clicked '{label}' successfully")
                     else:
                         print(f"❌ Could not find element for '{label}'")
@@ -69,7 +86,7 @@ def get_temp_email_and_otp():
         safe_click("HR, Jobs & Career")
 
         # ✅ Wait for content to update
-        page.wait_for_timeout(5000)
+        page2.wait_for_timeout(5000)
         print("✅ All filters applied successfully!")
 
         # ✅ Close browser

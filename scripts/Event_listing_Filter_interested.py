@@ -24,9 +24,10 @@ def get_temp_email_and_otp():
         page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
         time.sleep(5)
 
-        page.locator("//input[@aria-label='Enter your password']").fill("Samyak@1998")
+        page.locator("//input[@aria-label='Enter your password']").fill("Samyak@1996")
         page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
         time.sleep(5)
+
 
         page2 = context.new_page()
         page2.goto("https://10times.com/events")

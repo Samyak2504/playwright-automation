@@ -16,23 +16,40 @@ def get_temp_email_and_otp():
             extra_http_headers={"User-Agent": custom_user_agent}
         )
 
-        # ✅ Create page from context
         page = context.new_page()
-        page.goto("https://10times.com/events")
+        page.goto(
+            "https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0%2F&dsh=S19276807%3A1760080489828412&emr=1&followup=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0%2F&ifkv=AfYwgwXM93X1KSMmQbIViupG4RT0-W7pozpYpvQXeQ6ge904nOmlBue32q4ctptZlWj86AOXcIdwSQ&osid=1&passive=1209600&service=mail&flowName=GlifWebSignIn&flowEntry=ServiceLogin")
+        time.sleep(5)
+
+        # Wait
+        email_input = page.locator('//input[@id="identifierId"]')
+        email_input.wait_for(timeout=10000)
+        email_input.fill("Samyak@10times.com")
+        print("✅ Email field filled successfully!")
+
+        page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
+        time.sleep(5)
+
+        page.locator("//input[@aria-label='Enter your password']").fill("Samyak@1996")
+        page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
+        time.sleep(5)
+
+        page2 = context.new_page()
+        page2.goto("https://10times.com/events")
 
         # ✅ Apply Format filter by clicking on the specified <a> element
-        page.locator("//a[@class='d-flex btn btn-sm w-100 text-start px-0 py-2 c-ga' and @href='/tradeshows' and @data-ga-category='Listing Filter' and @data-ga-action='City' and @data-ga-label='Event Listing | Filter | Tradeshows']").click()
+        page2.locator("//a[@class='d-flex btn btn-sm w-100 text-start px-0 py-2 c-ga' and @href='/tradeshows' and @data-ga-category='Listing Filter' and @data-ga-action='City' and @data-ga-label='Event Listing | Filter | Tradeshows']").click()
 
         # ✅ Slight scroll to load filters (scroll just 300px)
-        page.evaluate("window.scrollBy(0, 100);")
+        page2.evaluate("window.scrollBy(0, 100);")
         time.sleep(2)  # Wait for content to load
 
         # ✅ Use exact XPath to click "London" filter
-        locator = page.locator("//span[@class='d-flex justify-content-between' and normalize-space()='London']")
+        locator = page2.locator("//span[@class='d-flex justify-content-between' and normalize-space()='London']")
         locator.first.click()  # Use .first in case of duplicates
 
         # Wait for the page to load after applying the filter
-        page.wait_for_timeout(5000)  # You can adjust the timeout as per your requirement
+        page2.wait_for_timeout(5000)  # You can adjust the timeout as per your requirement
 
         # ✅ Capture email or OTP (if needed, implement further steps here)
         # You can add code to capture email or OTP as per your need.
