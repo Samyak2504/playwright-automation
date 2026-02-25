@@ -33,7 +33,35 @@ def get_temp_email_and_otp_mobile():
         page2.goto("https://10times.com/events?olk", wait_until="networkidle")
         time.sleep(5)
 
-        # apply 1st filter the interested
+        # MOBILE menu
+        # Apply 1st filter
+
+        page2.locator("//button[@id='type-tab']").click()
+        print("Open the format filter")
+        time.sleep(5)
+
+        page2.locator("//input[@name='Format' and @value='Tradeshows']").click()
+        print("Select any format filter")
+        time.sleep(5)
+
+        page2.locator("//button[normalize-space(text())='Apply']").click()
+        print("Apply format filter")
+        time.sleep(5)
+
+        # Apply 2nd Filter
+        page2.locator("//button[normalize-space(text())='Category']").click()
+        print("Open the category filter")
+        time.sleep(5)
+
+        page2.locator("//input[@type='radio' and @value='Medical & Pharma']").click()
+        print("Select any category filter")
+        time.sleep(5)
+
+        page2.locator("//button[normalize-space(text())='Apply']").click()
+        print("Apply category filter")
+        time.sleep(5)
+
+        # 3rd Filter
         page2.locator("//button[@id='location-tab']").click()
         print("Open the Location filter")
         time.sleep(5)
@@ -44,19 +72,8 @@ def get_temp_email_and_otp_mobile():
 
         page2.locator("//button[normalize-space(text())='Apply']").click()
         print("Apply Location filter")
-        time.sleep(5)
-
-        # Filter then Interested
-        page2.locator("(//button[.//span[text()='Interested']])[1]").click()
-        time.sleep(3)
-
-        page2.locator("//div[@data-name='gLogin']").click()
-        print("Thank you modal open")
-        time.sleep(5)
-
-        page2.locator("(//button[contains(@class,'btn-close')])[1]").click()
-        print("Thank you modal closed")
         time.sleep(10)
+
 
         browser.close()
 

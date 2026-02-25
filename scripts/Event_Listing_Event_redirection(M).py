@@ -3,7 +3,7 @@ import time
 
 def get_temp_email_and_otp_mobile():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False, slow_mo=800)
+        browser = p.chromium.launch(headless=True, slow_mo=800)
 
         device = p.devices["iPhone 13"].copy()
 
@@ -35,15 +35,8 @@ def get_temp_email_and_otp_mobile():
 
         # MOBILE menu
 
-        page2.locator("(//button[.//span[text()='Interested']])[1]").click()
-        time.sleep(3)
-
-        page2.locator("//div[@data-name='gLogin']").click()
-        print("Thank you modal open")
-        time.sleep(5)
-
-        page2.locator("(//button[@data-ga-action='Follow'])[1]").click()
-        print("Thank you modal closed")
+        page2.locator("(//div[contains(@class, 'd-flex') and contains(@class, 'text-primary')])[1]").click()
+        print("Redirection to evnt page")
         time.sleep(5)
 
         time.sleep(10)
