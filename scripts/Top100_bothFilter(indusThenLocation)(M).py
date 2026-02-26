@@ -1,6 +1,7 @@
 from playwright.sync_api import sync_playwright
 import time
 
+
 def get_temp_email_and_otp_mobile():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True, slow_mo=800)
@@ -30,24 +31,30 @@ def get_temp_email_and_otp_mobile():
 
         # --- Open 10times ---
         page2 = context.new_page()
-        page2.goto("https://10times.com/events?olk", wait_until="networkidle")
+        page2.goto("https://10times.com/top100?olk", wait_until="networkidle")
         time.sleep(5)
 
         # MOBILE menu
-
-        page2.locator("(//button[.//span[text()='Follow']])[1]").click()
-        time.sleep(3)
-
-        page2.locator("//div[@data-name='gLogin']").click()
-        print("Thank you modal open")
+        # 1st Filter
+        page2.locator("(//button[@id='by-track']").click()
+        print("Open topic/industry filter")
         time.sleep(5)
 
-        page2.locator("(//button[contains(@class,'btn-close')])[1]").click()
-        print("Thank you modal closed")
-        time.sleep(5)
-
+        page2.locator("//a[.//span[normalize-space()='Education & Training']]").click()
+        print("Select industry")
         time.sleep(10)
+
+        # 2nd filter
+        page2.locator("//button[@id='by-location']").click()
+        print("Open Location filter")
+        time.sleep(5)
+
+        page2.locator("//a[.//span[text()='Albania']]").click()
+        print("Select Location")
+        time.sleep(10)
+
         browser.close()
+
 
 if __name__ == "__main__":
     get_temp_email_and_otp_mobile()
