@@ -3,7 +3,7 @@ import time
 
 def run():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False, slow_mo=300)
+        browser = p.chromium.launch(headless=True, slow_mo=300)
 
         # 📱 iPhone 13 Mobile Emulation
         device = p.devices["iPhone 13"]
@@ -53,26 +53,10 @@ def run():
         print("Expand the calender  ")
         time.sleep(5)
 
-        # ---------------- SCROLL (Mobile Friendly) ----------------
-        page2.locator("div[class*='dashboardeventcard_style_bigName']").first.scroll_into_view_if_needed()
-        page2.wait_for_timeout(1500)
-
-        print("⬇ Scrolled to Events")
-
-        # ---------------- CLICK FIRST EVENT (NEW TAB) ----------------
-        events = page2.locator("div[class*='dashboardeventcard_style_bigName']")
-
-        with context.expect_page() as new_page_info:
-            events.first.click()
-
-        event_page = new_page_info.value
-        event_page.wait_for_load_state("domcontentloaded")
-
-        print("✅ Event Page Opened")
-
-        # ---------------- CLICK CONNECT ----------------
-        event_page.get_by_role("button", name="Connect").click()
-        print("✅ Connect Clicked")
+        # Click on Backward button
+        page2.locator("//button[.//*[name()='svg' and contains(@class,'lucide-chevron-left')]]").click()
+        print(" calender Backward  ")
+        time.sleep(5)
 
         event_page.wait_for_timeout(5000)
 

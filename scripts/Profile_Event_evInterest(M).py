@@ -3,7 +3,7 @@ import time
 
 def run():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False, slow_mo=300)
+        browser = p.chromium.launch(headless=True, slow_mo=300)
 
         # 📱 iPhone 13 Mobile Emulation
         device = p.devices["iPhone 13"]
@@ -69,10 +69,6 @@ def run():
         event_page.wait_for_load_state("domcontentloaded")
 
         print("✅ Event Page Opened")
-
-        # ---------------- CLICK CONNECT ----------------
-        event_page.get_by_role("button", name="Connect").click()
-        print("✅ Connect Clicked")
 
         event_page.wait_for_timeout(5000)
 

@@ -25,7 +25,7 @@ def get_temp_email_and_otp_mobile():
         page.get_by_role("button", name="Next").click()
         time.sleep(4)
 
-        page.locator("input[type='password']").fill("Samyak@1996")
+        page.locator("input[type='password']").fill("Samyak@1998")
         page.get_by_role("button", name="Next").click()
         time.sleep(6)
 

@@ -3,7 +3,7 @@ import time
 
 def get_temp_email_and_otp_mobile():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False, slow_mo=800)
+        browser = p.chromium.launch(headless=True, slow_mo=800)
 
         device = p.devices["iPhone 13"].copy()
 
@@ -24,34 +24,36 @@ def get_temp_email_and_otp_mobile():
         page.get_by_role("button", name="Next").click()
         time.sleep(4)
 
-        page.locator("input[type='password']").fill("Samyak@1996")
+        page.locator("input[type='password']").fill("Samyak@1998")
         page.get_by_role("button", name="Next").click()
         time.sleep(6)
 
         # --- Open 10times ---
         page2 = context.new_page()
-        page2.goto("https://10times.com/experts", wait_until="networkidle")
+        page2.goto("https://10times.com?olk", wait_until="networkidle")
         time.sleep(5)
 
         # MOBILE menu
-        #  Use exact XPath to open location filter
-        locator = page2.locator("//li[@id='by-location']")
-        locator.first.click()  # Use .first in case of duplicates
-        print("open location filter  ")
+        page2.locator("(//*[local-name()='svg']//*[local-name()='path'])[1]").click()
+        time.sleep(2)
 
-        # Use .first in case of duplicates
-        locator = page2.locator("//a[normalize-space()='London']")
-        locator.first.click()
-        print("Select location")
+        page2.locator("text=Login").click()
+        time.sleep(3)
 
-        # Strong reload in mobile view
-        current_url = page2.url
-        page2.goto(current_url, wait_until="networkidle")
-        page2.set_viewport_size({"width": 390, "height": 844})
+        page2.locator("//div[@data-name='gLogin']").click()
+        print("user Login ")
 
-        print("Page reloaded in mobile view")
+        # profile page open
+        page2.goto("https://10times.com/profile/amar-louni-70833003?olk")
 
-        page2.wait_for_timeout(3000)
+        # Click on close button
+        page2.locator("(//button[.//*[name()='svg']])[3]").click()
+        print("Expand the calender  ")
+        time.sleep(5)
+
+        # Click on 1st event
+        page2.locator("(//button[.//*[name()='svg']])[3]").click()
+        print("Page redirect to the evinterest page ")
 
         time.sleep(10)
         browser.close()
