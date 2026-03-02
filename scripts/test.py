@@ -1,60 +1,48 @@
 from playwright.sync_api import sync_playwright
-import time
 
-
-def get_temp_email_and_otp_mobile():
+def open_10times_mobile():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True, slow_mo=800)
+        browser = p.chromium.launch(headless=False, slow_mo=500)
 
-        device = p.devices["iPhone 13"].copy()
-
-        # (optional) override values SAFELY
-        device["viewport"] = {"width": 390, "height": 844}
-        device["is_mobile"] = True
-        device["has_touch"] = True
-
+        device = p.devices["iPhone 13"]
         context = browser.new_context(**device)
-
         page = context.new_page()
 
-        # --- Google login ---
-        page.goto("https://accounts.google.com/")
+        page.goto("https://10times.com/experts", wait_until="networkidle")
+
+        # Open location filter
+        page.locator("//li[@id='by-location']").first.click()
+        print("Opened location filter")
+
+        # Select London
+        page.locator("//a[normalize-space()='London']").first.click()
+        print("Selected London")
+
+        # Wait for page update
         page.wait_for_load_state("networkidle")
 
-        page.locator("#identifierId").fill("Samyak@10times.com")
-        page.get_by_role("button", name="Next").click()
-        time.sleep(4)
+        # Get current URL
+        current_url = page.url
+        print("Original URL:", current_url)
 
-        page.locator("input[type='password']").fill("Samyak@1996")
-        page.get_by_role("button", name="Next").click()
-        time.sleep(6)
+        # Add ?olk properly
+        if "?olk" not in current_url:
+            if "?" in current_url:
+                new_url = current_url + "&olk"
+            else:
+                new_url = current_url + "?olk"
+        else:
+            new_url = current_url
 
-        # --- Open 10times ---
-        page2 = context.new_page()
-        page2.goto("https://10times.com/top100?olk", wait_until="networkidle")
-        time.sleep(5)
+        print("Modified URL:", new_url)
 
-        # MOBILE menu
-        # 1st filter
-        page2.locator("//button[@id='by-location']").click()
-        print("Open Location filter")
-        time.sleep(5)
+        # Open modified URL
+        page.goto(new_url, wait_until="networkidle")
 
-        page2.locator("//a[.//span[text()='Albania']]").click()
-        print("Select Location")
-        time.sleep(10)
+        print("Opened URL with ?olk in MOBILE view")
 
-        # 2nd Filter
-        page2.locator("(//button[@id='by-track']").click()
-        print("Open topic/industry filter")
-        time.sleep(5)
-
-        page2.locator("//a[.//span[normalize-space()='Education & Training']]").click()
-        print("Select industry")
-        time.sleep(10)
-
+        page.wait_for_timeout(5000)
         browser.close()
 
-
 if __name__ == "__main__":
-    get_temp_email_and_otp_mobile()
+    open_10times_mobile()

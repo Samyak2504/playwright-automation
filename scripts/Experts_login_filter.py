@@ -40,7 +40,6 @@ def get_temp_email_and_otp():
 
         #  Wait after click
         page.wait_for_timeout(3000)
-
         browser.close()
 
 if __name__ == "__main__":

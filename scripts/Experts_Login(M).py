@@ -3,7 +3,7 @@ import time
 
 def get_temp_email_and_otp_mobile():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False, slow_mo=800)
+        browser = p.chromium.launch(headless=True, slow_mo=800)
 
         device = p.devices["iPhone 13"].copy()
 
@@ -34,24 +34,14 @@ def get_temp_email_and_otp_mobile():
         time.sleep(5)
 
         # MOBILE menu
-        #  Use exact XPath to open location filter
-        locator = page2.locator("//li[@id='by-location']")
-        locator.first.click()  # Use .first in case of duplicates
-        print("open location filter  ")
+        page2.locator("(//*[local-name()='svg']//*[local-name()='path'])[1]").click()
+        time.sleep(2)
 
-        # Use .first in case of duplicates
-        locator = page2.locator("//a[normalize-space()='London']")
-        locator.first.click()
-        print("Select location")
+        page2.locator("text=Login").click()
+        time.sleep(3)
 
-        # Strong reload in mobile view
-        current_url = page2.url
-        page2.goto(current_url, wait_until="networkidle")
-        page2.set_viewport_size({"width": 390, "height": 844})
-
-        print("Page reloaded in mobile view")
-
-        page2.wait_for_timeout(3000)
+        page2.locator("//div[@data-name='gLogin']").click()
+        print("user Login ")
 
         time.sleep(10)
         browser.close()

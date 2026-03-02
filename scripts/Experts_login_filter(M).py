@@ -3,7 +3,7 @@ import time
 
 def get_temp_email_and_otp_mobile():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False, slow_mo=800)
+        browser = p.chromium.launch(headless=True, slow_mo=800)
 
         device = p.devices["iPhone 13"].copy()
 
@@ -42,16 +42,10 @@ def get_temp_email_and_otp_mobile():
         # Use .first in case of duplicates
         locator = page2.locator("//a[normalize-space()='London']")
         locator.first.click()
-        print("Select location")
+        print("Select location ")
 
-        # Strong reload in mobile view
-        current_url = page2.url
-        page2.goto(current_url, wait_until="networkidle")
-        page2.set_viewport_size({"width": 390, "height": 844})
-
-        print("Page reloaded in mobile view")
-
-        page2.wait_for_timeout(3000)
+        #  Wait after click
+        page.wait_for_timeout(3000)
 
         time.sleep(10)
         browser.close()
