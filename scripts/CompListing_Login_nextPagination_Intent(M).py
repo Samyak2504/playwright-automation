@@ -4,8 +4,8 @@ def get_temp_email_and_otp_mobile():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False, slow_mo=800)
 
-        # iPhone 13 emulation
-        device = p.devices["iPhone 13"].copy()
+        # iPhone 13. emulation
+        device = p.devices["iPhone 13."].copy()
         device["viewport"] = {"width": 390, "height": 844}
         device["is_mobile"] = True
         device["has_touch"] = True
