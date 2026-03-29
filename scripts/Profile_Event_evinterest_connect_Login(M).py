@@ -18,7 +18,7 @@ def run():
 
         password_input = google_page.get_by_label("Enter your password")
         password_input.wait_for()
-        password_input.fill("Samyak@1998")
+        password_input.fill("Samyak@1996")
 
         google_page.get_by_role("button", name="Next").click()
         google_page.wait_for_load_state("networkidle")

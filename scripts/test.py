@@ -1,33 +1,37 @@
 from playwright.sync_api import sync_playwright
 import time
 
-def run():
+def get_temp_email_and_otp_mobile():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False, slow_mo=300)
+        browser = p.chromium.launch(headless=True, slow_mo=800)
 
-        # 📱 iPhone 13 Mobile Emulation
-        device = p.devices["iPhone 13"]
+        device = p.devices["iPhone 13"].copy()
+
+        # (optional) override values SAFELY
+        device["viewport"] = {"width": 390, "height": 844}
+        device["is_mobile"] = True
+        device["has_touch"] = True
+
         context = browser.new_context(**device)
 
-        # ---------------- TAB 1 : GOOGLE LOGIN ----------------
-        google_page = context.new_page()
-        google_page.goto("https://accounts.google.com/", wait_until="networkidle")
+        page = context.new_page()
 
-        google_page.fill("#identifierId", "samyak@10times.com")
-        google_page.get_by_role("button", name="Next").click()
+        # --- Google login ---
+        page.goto("https://accounts.google.com/")
+        page.wait_for_load_state("networkidle")
 
-        password_input = google_page.get_by_label("Enter your password")
-        password_input.wait_for()
-        password_input.fill("Samyak@1998")
+        page.locator("#identifierId").fill("Samyak@10times.com")
+        page.get_by_role("button", name="Next").click()
+        time.sleep(4)
 
-        google_page.get_by_role("button", name="Next").click()
-        google_page.wait_for_load_state("networkidle")
+        page.locator("input[type='password']").fill("Samyak@1996")
+        page.get_by_role("button", name="Next").click()
+        time.sleep(6)
 
-        print("✅ Google Login Done (Mobile View)")
-
-        # ---------------- TAB 2 : 10TIMES ----------------
+        # --- Open 10times ---
         page2 = context.new_page()
-        page2.goto("https://10times.com?olk", wait_until="networkidle")
+        page2.goto("https://10times.com/events?olk", wait_until="networkidle")
+        time.sleep(5)
 
         # MOBILE menu
         page2.locator("(//*[local-name()='svg']//*[local-name()='path'])[1]").click()
@@ -37,47 +41,9 @@ def run():
         time.sleep(3)
 
         page2.locator("//div[@data-name='gLogin']").click()
-        print("user Login ")
 
-        # Same tab me profile open
-        page2.goto(
-            "https://10times.com/profile/amar-louni-70833003?olk",
-            wait_until="networkidle"
-        )
-
-        print("✅ Profile Page Opened (Mobile)")
-
-        # ---------------- CLOSE POPUP IF PRESENT ----------------
-        # Click on close button
-        page2.locator("(//button[.//*[name()='svg']])[3]").click()
-        print("Expand the calender  ")
-        time.sleep(5)
-
-        # ---------------- SCROLL (Mobile Friendly) ----------------
-        page2.locator("div[class*='dashboardeventcard_style_bigName']").first.scroll_into_view_if_needed()
-        page2.wait_for_timeout(1500)
-
-        print("⬇ Scrolled to Events")
-
-        # ---------------- CLICK FIRST EVENT (NEW TAB) ----------------
-        events = page2.locator("div[class*='dashboardeventcard_style_bigName']")
-
-        with context.expect_page() as new_page_info:
-            events.first.click()
-
-        event_page = new_page_info.value
-        event_page.wait_for_load_state("domcontentloaded")
-
-        print("✅ Event Page Opened")
-
-        # ---------------- CLICK CONNECT ----------------
-        event_page.get_by_role("button", name="Connect").click()
-        print("✅ Connect Clicked")
-
-        event_page.wait_for_timeout(5000)
-
+        time.sleep(10)
         browser.close()
 
-
 if __name__ == "__main__":
-    run()
+    get_temp_email_and_otp_mobile()
