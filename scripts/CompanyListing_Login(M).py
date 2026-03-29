@@ -3,7 +3,7 @@ import time
 
 def get_temp_email_and_otp_mobile():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False, slow_mo=800)
+        browser = p.chromium.launch(headless=True, slow_mo=800)
 
         device = p.devices["iPhone 13"].copy()
 
@@ -30,7 +30,7 @@ def get_temp_email_and_otp_mobile():
 
         # --- Open 10times ---
         page2 = context.new_page()
-        page2.goto("https://10times.com/company?olk", wait_until="networkidle")
+        page2.goto("https://10times.com/company", wait_until="networkidle")
         time.sleep(5)
 
         # MOBILE menu

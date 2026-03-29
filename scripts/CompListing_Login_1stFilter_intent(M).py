@@ -60,6 +60,7 @@ def get_temp_email_and_otp_mobile():
 
         #  Wait after click
         time.sleep(2)
+
         #  Wait for intent
         page2.locator("(//span[normalize-space()='Follow'])[1]").click()
         time.sleep(30)

@@ -44,25 +44,66 @@ def get_temp_email_and_otp_mobile():
         print("Gmail Login ")
         time.sleep(2)
 
-
         #  Use exact XPath to open "location" filter
         locator = page2.locator("//li[@id='by-location']")
         locator.first.click()  # Use .first in case of duplicates
-        print("open location filter ")
+        print("open 1st location filter ")
 
         #  Wait after click
         time.sleep(2)
 
         #  Use exact XPath to click 1st "London" filter
-        locator = page2.locator("//a[normalize-space()='USA']")
+        locator = page2.locator("//a[normalize-space()='London']")
         locator.first.click()  # Use .first in case of duplicates
-        print("Select one location  ")
+        print("Select any location  ")
+        time.sleep(2)
+
+        #  2nd open "category" filter
+        locator = page2.locator("//li[@id='by-category']")
+        locator.first.click()  # Use .first in case of duplicates
+        print("open 2nd category filter ")
 
         #  Wait after click
         time.sleep(2)
+
+        #  Use exact XPath to click 2nd filter
+        locator = page2.locator("(//a[normalize-space()='Education & Training'])[1]")
+        locator.first.click()  # Use .first in case of duplicates
+        print("Select any category  ")
+
+        #  Wait after click
+        time.sleep(2)
+
+        #  3rd open "Event" filter
+        locator = page2.locator("//li[@id='by-events']")
+        locator.first.click()  # Use .first in case of duplicates
+        print("open 3rd Event filter ")
+
+        #  Wait after click
+        time.sleep(2)
+
+        #  Use exact XPath to click 3rd "Event" filter
+        locator = page2.locator("//a[normalize-space()='less than 10']")
+        locator.first.click()  # Use .first in case of duplicates
+        print("Select any Event  ")
+        time.sleep(2)
+
+        #  4th open "Followers" filter
+        locator = page2.locator("//li[@id='by-followers']")
+        locator.first.click()  # Use .first in case of duplicates
+        print("open 4th Followers filter ")
+
+        #  Wait after click
+        time.sleep(2)
+
+        #  Use exact XPath to click 4th "Followers" filter
+        locator = page2.locator("//a[normalize-space()='50+']")
+        locator.first.click()
+        print("Select any Followers  ")
+        time.sleep(5)
+
         #  Wait for intent
         page2.locator("(//span[normalize-space()='Follow'])[1]").click()
-        time.sleep(30)
         print("Intent  ")
 
         time.sleep(10)

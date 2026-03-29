@@ -44,7 +44,6 @@ def get_temp_email_and_otp_mobile():
         print("Gmail Login ")
         time.sleep(2)
 
-
         #  Use exact XPath to open "location" filter
         locator = page2.locator("//li[@id='by-location']")
         locator.first.click()  # Use .first in case of duplicates
@@ -54,16 +53,24 @@ def get_temp_email_and_otp_mobile():
         time.sleep(2)
 
         #  Use exact XPath to click 1st "London" filter
-        locator = page2.locator("//a[normalize-space()='USA']")
+        locator = page2.locator("//a[normalize-space()='London']")
         locator.first.click()  # Use .first in case of duplicates
         print("Select one location  ")
+        time.sleep(2)
+
+        #  Use exact XPath to open "category" filter
+        locator = page2.locator("//li[@id='by-category']")
+        locator.first.click()  # Use .first in case of duplicates
+        print("open category filter ")
 
         #  Wait after click
         time.sleep(2)
-        #  Wait for intent
-        page2.locator("(//span[normalize-space()='Follow'])[1]").click()
-        time.sleep(30)
-        print("Intent  ")
+
+        #  Use exact XPath to click 2nd filter
+        locator = page2.locator("(//a[normalize-space()='Education & Training'])[1]")
+        locator.first.click()  # Use .first in case of duplicates
+        print("Select 2nd category  ")
+
 
         time.sleep(10)
         browser.close()
