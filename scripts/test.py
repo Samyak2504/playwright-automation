@@ -1,72 +1,49 @@
 from playwright.sync_api import sync_playwright
+import re
 import time
 
-def get_temp_email_and_otp_mobile():
+def get_temp_email_and_otp():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True, slow_mo=800)
-
-        device = p.devices["iPhone 13."].copy()
-
-        # (optional) override values SAFELY
-        device["viewport"] = {"width": 390, "height": 844}
-        device["is_mobile"] = True
-        device["has_touch"] = True
-
-        context = browser.new_context(**device)
+        browser = p.firefox.launch(headless=True, slow_mo=1000)
+        custom_user_agent = "TenTimes internal Testing/tentimestesting10t112"
+        context = browser.new_context(
+            user_agent=custom_user_agent,
+            extra_http_headers={"User-Agent": custom_user_agent}
+        )
 
         page = context.new_page()
-
-        # --- Google login ---
-        page.goto("https://accounts.google.com/")
-        page.wait_for_load_state("networkidle")
-
-        page.locator("#identifierId").fill("Samyak@10times.com")
-        page.get_by_role("button", name="Next").click()
-        time.sleep(4)
-
-        page.locator("input[type='password']").fill("Samyak@1996")
-        page.get_by_role("button", name="Next").click()
-        time.sleep(6)
-
-        # --- Open 10times ---
-        page2 = context.new_page()
-        page2.goto("https://10times.com/company", wait_until="networkidle")
+        page.goto("https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0%2F&dsh=S19276807%3A1760080489828412&emr=1&followup=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0%2F&ifkv=AfYwgwXM93X1KSMmQbIViupG4RT0-W7pozpYpvQXeQ6ge904nOmlBue32q4ctptZlWj86AOXcIdwSQ&osid=1&passive=1209600&service=mail&flowName=GlifWebSignIn&flowEntry=ServiceLogin")
         time.sleep(5)
 
-        # MOBILE menu
-        page2.locator("(//*[local-name()='svg']//*[local-name()='path'])[1]").click()
-        time.sleep(2)
+        # Wait and fill email/phone field
+        email_input = page.locator('//input[@id="identifierId"]')
+        email_input.wait_for(timeout=10000)
+        email_input.fill("Samyak@10times.com")
+        print("✅ Email field filled successfully!")
 
-        page2.locator("text=Login").click()
-        time.sleep(3)
+        page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
+        time.sleep(5)
 
+        page.locator("//input[@aria-label='Enter your password']").fill("Samyak@1996")
+        page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
+        time.sleep(5)
+
+        page2 = context.new_page()
+        page2.goto("https://10times.com/company")
+        page2.get_by_role("button", name="Login").click()
         page2.locator("//div[@data-name='gLogin']").click()
-        print("Gmail Login ")
-        time.sleep(2)
+        print("User Login successful")
+        time.sleep(5)
+
+        page2.goto("https://10times.com/company/the-royal-institution-of-chartered-surveyors")
+        time.sleep(5)
+
+        page2.locator("//button[normalize-space()='+ Follow Company']").click()
+        print("User intent on the +Follow company button")
+        time.sleep(5)
 
 
-        #  Use exact XPath to open "location" filter
-        locator = page2.locator("//li[@id='by-location']")
-        locator.first.click()  # Use .first in case of duplicates
-        print("open location filter ")
-
-        #  Wait after click
-        time.sleep(2)
-
-        #  Use exact XPath to click 1st "London" filter
-        locator = page2.locator("//a[normalize-space()='USA']")
-        locator.first.click()  # Use .first in case of duplicates
-        print("Select one location  ")
-
-        #  Wait after click
-        time.sleep(2)
-        #  Wait for intent
-        page2.locator("(//span[normalize-space()='Follow'])[1]").click()
-        time.sleep(30)
-        print("Intent  ")
-
-        time.sleep(10)
         browser.close()
 
 if __name__ == "__main__":
-    get_temp_email_and_otp_mobile()
+    get_temp_email_and_otp()

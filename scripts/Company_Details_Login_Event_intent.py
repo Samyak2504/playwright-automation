@@ -41,8 +41,8 @@ def get_temp_email_and_otp():
         page2.locator("//button[@id='event-calendar-link']").click()
         print("User Redirect to the calender section")
 
-        # Intent on the evenet
-        page2.locator("(//button[.//span[normalize-space()='Interested']])[1]").click()
+        # Intent on the event
+        page2.locator("(//span[normalize-space()='Interested'])[1]").click()
         page2.locator("(//button[@aria-label='close'])[2]").click()
         print("User intent on the event")
         time.sleep(10)
