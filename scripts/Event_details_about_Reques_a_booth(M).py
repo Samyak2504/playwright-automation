@@ -34,14 +34,24 @@ def get_temp_email_and_otp_mobile():
         time.sleep(5)
 
         # MOBILE menu
-        page2.locator("//span[normalize-space()='View Details']").click()
+        page2.locator("//div[@id='request_Booth']").click()
         time.sleep(2)
 
-        page2.locator("(//span[normalize-space()='Buy Now'])[2]").click()
-        time.sleep(2)
+        page2.locator("text=Login").click()
+        time.sleep(3)
 
         page2.locator("//div[@data-name='gLogin']").click()
-        print("user Login via event edition button ")
+        print("user Login via Request_Booth button ")
+        time.sleep(5)
+
+        page2.locator("(//td/input[@type='radio' and @name='ticket'])[1]").click()
+        print("Select any booth ")
+        time.sleep(2)
+
+        page2.locator("//input[@type='submit' and @value='Submit']").click()
+        print("Booth confirm via submit button ")
+        time.sleep(2)
+
 
         time.sleep(10)
         browser.close()

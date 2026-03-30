@@ -1,49 +1,50 @@
 from playwright.sync_api import sync_playwright
-import re
 import time
 
-def get_temp_email_and_otp():
+def get_temp_email_and_otp_mobile():
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=True, slow_mo=1000)
-        custom_user_agent = "TenTimes internal Testing/tentimestesting10t112"
-        context = browser.new_context(
-            user_agent=custom_user_agent,
-            extra_http_headers={"User-Agent": custom_user_agent}
-        )
+        browser = p.chromium.launch(headless=True, slow_mo=800)
+
+        device = p.devices["iPhone 13."].copy()
+
+        # (optional) override values SAFELY
+        device["viewport"] = {"width": 390, "height": 844}
+        device["is_mobile"] = True
+        device["has_touch"] = True
+
+        context = browser.new_context(**device)
 
         page = context.new_page()
-        page.goto("https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0%2F&dsh=S19276807%3A1760080489828412&emr=1&followup=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0%2F&ifkv=AfYwgwXM93X1KSMmQbIViupG4RT0-W7pozpYpvQXeQ6ge904nOmlBue32q4ctptZlWj86AOXcIdwSQ&osid=1&passive=1209600&service=mail&flowName=GlifWebSignIn&flowEntry=ServiceLogin")
-        time.sleep(5)
 
-        # Wait and fill email/phone field
-        email_input = page.locator('//input[@id="identifierId"]')
-        email_input.wait_for(timeout=10000)
-        email_input.fill("Samyak@10times.com")
-        print("✅ Email field filled successfully!")
+        # --- Google login ---
+        page.goto("https://accounts.google.com/")
+        page.wait_for_load_state("networkidle")
 
-        page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
-        time.sleep(5)
+        page.locator("#identifierId").fill("Samyak@10times.com")
+        page.get_by_role("button", name="Next").click()
+        time.sleep(4)
 
-        page.locator("//input[@aria-label='Enter your password']").fill("Samyak@1996")
-        page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
-        time.sleep(5)
+        page.locator("input[type='password']").fill("Samyak@1996")
+        page.get_by_role("button", name="Next").click()
+        time.sleep(6)
 
+        # --- Open 10times ---
         page2 = context.new_page()
-        page2.goto("https://10times.com/company")
-        page2.get_by_role("button", name="Login").click()
+        page2.goto("https://10times.com/company", wait_until="networkidle")
+        time.sleep(5)
+
+        # MOBILE menu
+        page2.locator("(//*[local-name()='svg']//*[local-name()='path'])[1]").click()
+        time.sleep(2)
+
+        page2.locator("text=Login").click()
+        time.sleep(3)
+
         page2.locator("//div[@data-name='gLogin']").click()
-        print("User Login successful")
-        time.sleep(5)
+        print("user Login ")
 
-        page2.goto("https://10times.com/company/the-royal-institution-of-chartered-surveyors")
-        time.sleep(5)
-
-        page2.locator("//button[normalize-space()='+ Follow Company']").click()
-        print("User intent on the +Follow company button")
-        time.sleep(5)
-
-
+        time.sleep(10)
         browser.close()
 
 if __name__ == "__main__":
-    get_temp_email_and_otp()
+    get_temp_email_and_otp_mobile()

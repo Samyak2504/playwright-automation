@@ -34,14 +34,14 @@ def get_temp_email_and_otp_mobile():
         time.sleep(5)
 
         # MOBILE menu
-        page2.locator("//span[normalize-space()='View Details']").click()
+        page2.locator("(//div[contains(@class,'payRegister') and text()='Register'])[1]").click()
         time.sleep(2)
 
-        page2.locator("(//span[normalize-space()='Buy Now'])[2]").click()
-        time.sleep(2)
+        page2.locator("text=Login").click()
+        time.sleep(3)
 
         page2.locator("//div[@data-name='gLogin']").click()
-        print("user Login via event edition button ")
+        print("user Login via Register button ")
 
         time.sleep(10)
         browser.close()

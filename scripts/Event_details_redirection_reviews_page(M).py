@@ -16,17 +16,7 @@ def get_temp_email_and_otp_mobile():
 
         page = context.new_page()
 
-        # --- Google login ---
-        page.goto("https://accounts.google.com/")
-        page.wait_for_load_state("networkidle")
 
-        page.locator("#identifierId").fill("Samyak@10times.com")
-        page.get_by_role("button", name="Next").click()
-        time.sleep(4)
-
-        page.locator("input[type='password']").fill("Samyak@1996")
-        page.get_by_role("button", name="Next").click()
-        time.sleep(6)
 
         # --- Open 10times ---
         page2 = context.new_page()
@@ -34,15 +24,8 @@ def get_temp_email_and_otp_mobile():
         time.sleep(5)
 
         # MOBILE menu
-        page2.locator("//span[normalize-space()='View Details']").click()
-        time.sleep(2)
-
-        page2.locator("(//span[normalize-space()='Buy Now'])[2]").click()
-        time.sleep(2)
-
-        page2.locator("//div[@data-name='gLogin']").click()
-        print("user Login via event edition button ")
-
+        page2.locator("(//span[contains(normalize-space(), 'Reviews')])[1]").click()
+        print("Redirection to the Reviews page ")
         time.sleep(10)
         browser.close()
 
