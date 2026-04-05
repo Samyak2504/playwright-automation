@@ -5,8 +5,8 @@ def run():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True, slow_mo=300)
 
-        # 📱 iPhone 13. Mobile Emulation
-        device = p.devices["iPhone 13."]
+        # 📱 iPhone 13 Mobile Emulation
+        device = p.devices["iPhone 13"]
         context = browser.new_context(**device)
 
         # ---------------- TAB 1 : GOOGLE LOGIN ----------------

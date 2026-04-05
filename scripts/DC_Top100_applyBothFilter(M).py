@@ -1,0 +1,48 @@
+from playwright.sync_api import sync_playwright
+import time
+
+
+def get_temp_email_and_otp_mobile():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True, slow_mo=800)
+
+        device = p.devices["iPhone 13"].copy()
+
+        # (optional) override values SAFELY
+        device["viewport"] = {"width": 390, "height": 844}
+        device["is_mobile"] = True
+        device["has_touch"] = True
+
+        context = browser.new_context(**device)
+
+        page = context.new_page()
+
+        # --- Open 10times ---
+        page2 = context.new_page()
+        page2.goto("https://10times.com/top100?olk", wait_until="networkidle")
+        time.sleep(5)
+
+        # MOBILE menu
+        # 1st filter
+        page2.locator("//button[@id='by-location']").click()
+        print("Open Location filter")
+        time.sleep(5)
+
+        page2.locator("//a[.//span[text()='Albania']]").click()
+        print("Select Location")
+        time.sleep(10)
+
+        # 2nd Filter
+        page2.locator("(//button[@id='by-track']").click()
+        print("Open topic/industry filter")
+        time.sleep(5)
+
+        page2.locator("//a[.//span[normalize-space()='Education & Training']]").click()
+        print("Select industry")
+        time.sleep(10)
+
+        browser.close()
+
+
+if __name__ == "__main__":
+    get_temp_email_and_otp_mobile()
