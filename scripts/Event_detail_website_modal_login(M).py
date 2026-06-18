@@ -4,6 +4,11 @@ import time
 def get_temp_email_and_otp_mobile():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True, slow_mo=800)
+        custom_user_agent = "TenTimes internal Testing/tentimestesting10t112"
+        context = browser.new_context(
+            user_agent=custom_user_agent,
+            extra_http_headers={"User-Agent": custom_user_agent}
+        )
 
         device = p.devices["iPhone 13"].copy()
 

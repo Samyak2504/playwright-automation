@@ -4,6 +4,11 @@ import time
 def run():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True, slow_mo=300)
+        custom_user_agent = "TenTimes internal Testing/tentimestesting10t112"
+        context = browser.new_context(
+            user_agent=custom_user_agent,
+            extra_http_headers={"User-Agent": custom_user_agent}
+        )
 
         # 📱 iPhone 13 Mobile Emulation
         device = p.devices["iPhone 13"]
