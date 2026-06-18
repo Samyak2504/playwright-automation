@@ -17,14 +17,15 @@ def get_temp_email_and_otp():
 
         # Wait and fill email/phone field
         email_input = page.locator('//input[@id="identifierId"]')
-        email_input.wait_for(timeout=10000)
+        email_input.wait_for(timeout=5000)
         email_input.fill("Samyak@10times.com")
-        print("✅ Email field filled successfully!")
+        print(" Email field filled successfully!")
 
         page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
         time.sleep(5)
 
         page.locator("//input[@aria-label='Enter your password']").fill("Samyak@2021")
+        print(" Password field filled successfully!")
         page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
         time.sleep(5)
 
@@ -32,9 +33,11 @@ def get_temp_email_and_otp():
         page2.goto("https://10times.com/experts")
         page2.get_by_role("button", name="Login").click()
         page2.locator("//div[@data-name='gLogin']").click()
+        print(" Login")
         time.sleep(10)
 
         page2.locator("(//span[normalize-space()='2'])[1]").click()
+        print(" Pagination")
 
         #  Wait after click
         time.sleep(2)
@@ -42,8 +45,9 @@ def get_temp_email_and_otp():
         #  Use exact XPath to click 1st "London" filter
         locator = page2.locator("//a[normalize-space()='London']")
         locator.first.click()  # Use .first in case of duplicates
+        print(" Pagination then filter")
 
-        #  Wait after click
+
         time.sleep(2)
 
         #  Wait after click

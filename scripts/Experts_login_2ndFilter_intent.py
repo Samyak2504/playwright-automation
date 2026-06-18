@@ -17,9 +17,9 @@ def get_temp_email_and_otp():
 
         # Wait and fill email/phone field
         email_input = page.locator('//input[@id="identifierId"]')
-        email_input.wait_for(timeout=10000)
+        email_input.wait_for(timeout=5000)
         email_input.fill("Samyak@10times.com")
-        print("✅ Email field filled successfully!")
+        print(" Email field filled successfully!")
 
         page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
         time.sleep(5)
@@ -44,13 +44,14 @@ def get_temp_email_and_otp():
         #  Use exact XPath to click 2nd  filter
         locator = page2.locator("//a[normalize-space()='Education & Training']")
         locator.first.click()  # Use .first in case of duplicates
+        print(" Apply category filter")
 
         #  Wait after click
         time.sleep(2)
 
         page2.locator("(//button[@aria-label='follow'])[1]").click()
-        time.sleep(30)
-
+        print(" intent follow button")
+        time.sleep(20)
 
         browser.close()
 

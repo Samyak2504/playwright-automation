@@ -17,9 +17,9 @@ def get_temp_email_and_otp():
 
         # Wait
         email_input = page.locator('//input[@id="identifierId"]')
-        email_input.wait_for(timeout=10000)
+        email_input.wait_for(timeout=5000)
         email_input.fill("Samyak@10times.com")
-        print("✅ Email field filled successfully!")
+        print(" Email field filled successfully!")
 
         page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
         time.sleep(5)
@@ -32,7 +32,7 @@ def get_temp_email_and_otp():
         page2.goto("https://10times.com/events")
         page2.locator("(//button[contains(@class, 'bookmark')])[1]").click()
         page2.locator("//span[contains(text(), 'Continue with Google')]").click()
-
+        print(" Login via bookmark button!")
 
         time.sleep(30)
 

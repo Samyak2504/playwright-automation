@@ -1,62 +1,40 @@
 from playwright.sync_api import sync_playwright
 import time
 
-def run_mobile():
+def get_temp_email_and_otp_mobile():
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=True, slow_mo=800)
+        browser = p.chromium.launch(headless=False, slow_mo=800)
 
-        #  Mobile
-        mobile_ua = (
-            "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) "
-            "AppleWebKit/605.1.15 (KHTML, like Gecko) "
-            "Version/15.0 Mobile/15E148 Safari/604.1 "
-            "TenTimes internal Testing/tentimestesting10t112"
-        )
+        device = p.devices["iPhone 13"].copy()
 
-        context = browser.new_context(
-            user_agent=mobile_ua,
-            viewport={"width": 390, "height": 844}  # mobile size
-        )
+        # (optional) override values SAFELY
+        device["viewport"] = {"width": 390, "height": 844}
+        device["is_mobile"] = True
+        device["has_touch"] = True
 
-        page = context.new_page()
+        context = browser.new_context(**device)
 
-        # -------- GOOGLE LOGIN --------
-        page.goto("https://accounts.google.com/")
-        time.sleep(3)
 
-        page.locator("#identifierId").fill("Samyak@10times.com")
-        page.get_by_role("button", name="Next").click()
-
-        page.wait_for_selector("input[type='password']", timeout=15000)
-
-        page.locator("input[type='password']").fill("Samyak@2021")
-        page.get_by_role("button", name="Next").click()
-
-        time.sleep(6)
-        print(" Google login done")
-
-        # -------- 10TIMES --------
+        # --- Open 10times ---
         page2 = context.new_page()
-        page2.goto("https://10times.com/events?olk")
-
+        page2.goto("https://10times.com/events", wait_until="networkidle")
         time.sleep(5)
 
-        print("UA:", page2.evaluate("navigator.userAgent"))
-        print("Width:", page2.evaluate("window.innerWidth"))
+        # MOBILE menu
 
-        # -------- MENU --------
-        page2.locator("(//*[local-name()='svg']//*[local-name()='path'])[1]").click()
-        time.sleep(2)
+        page2.locator("//button[@id='type-tab']").click()
+        print("Open the format filter")
+        time.sleep(5)
 
-        page2.locator("text=Login").click()
-        time.sleep(3)
+        page2.locator("//input[@name='Format' and @value='Tradeshows']").click()
+        print("Select any format filter")
+        time.sleep(5)
 
-        page2.locator("//div[@data-name='gLogin']").click()
-        print("User login")
-
+        page2.locator("//button[normalize-space(text())='Apply']").click()
+        print("Apply format filter")
         time.sleep(10)
+
         browser.close()
 
-
 if __name__ == "__main__":
-    run_mobile()
+    get_temp_email_and_otp_mobile()

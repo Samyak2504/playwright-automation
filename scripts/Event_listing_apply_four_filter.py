@@ -3,13 +3,13 @@ from playwright.sync_api import sync_playwright, TimeoutError
 
 def get_temp_email_and_otp():
     with sync_playwright() as p:
-        # ✅ Launch browser
+        #  Launch browser
         browser = p.firefox.launch(headless=True, slow_mo=500)
 
-        # ✅ Define custom user-agent
+        #  Define custom user-agent
         custom_user_agent = "TenTimes internal Testing/tentimestesting10t112"
 
-        # ✅ Create context with user-agent
+        #  Create context with user-agent
         context = browser.new_context(
             user_agent=custom_user_agent,
             extra_http_headers={"User-Agent": custom_user_agent}
@@ -24,7 +24,7 @@ def get_temp_email_and_otp():
         email_input = page.locator('//input[@id="identifierId"]')
         email_input.wait_for(timeout=10000)
         email_input.fill("Samyak@10times.com")
-        print("✅ Email field filled successfully!")
+        print(" Email field filled successfully!")
 
         page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
         time.sleep(5)
@@ -35,64 +35,64 @@ def get_temp_email_and_otp():
 
         page2 = context.new_page()
         page2.goto("https://10times.com/events")
-        print("✅ Page loaded successfully")
+        print(" Page loaded successfully")
 
-        # ✅ Click on “Tradeshows” filter
+        #  Click on “Tradeshows” filter
         try:
-            page2.locator("//a[@href='/tradeshows']").click(timeout=10000)
-            print("✅ Clicked on 'Tradeshows' filter")
+            page2.locator("//a[@href='/tradeshows']").click(timeout=5000)
+            print(" Clicked on 'Tradeshows' filter")
         except TimeoutError:
-            print("⚠️ Could not find 'Tradeshows' filter")
+            print(" Could not find 'Tradeshows' filter")
 
-        # ✅ Scroll slightly
+        #  Scroll slightly
         page2.evaluate("window.scrollBy(0, 200)")
         time.sleep(2)
 
-        # ✅ Click “London” filter
+        #  Click “London” filter
         try:
             london = page2.locator("//span[normalize-space()='London']").first
-            london.click(timeout=10000)
-            print("✅ Clicked on 'London' filter")
+            london.click(timeout=5000)
+            print(" Clicked on 'London' filter")
         except TimeoutError:
-            print("⚠️ 'London' filter not clickable")
+            print(" 'London' filter not clickable")
 
-        # ✅ Remove ad iframes before category filters
+        #  Remove ad iframes before category filters
         print("🧹 Removing Google Ads iframes...")
         page2.evaluate("""
             document.querySelectorAll('iframe, ins.adsbygoogle').forEach(el => el.remove());
         """)
 
-        # ✅ Function to click filters safely
+        #  Function to click filters safely
         def safe_click(label):
             locator = page2.locator(f"//span[normalize-space()='{label}']").first
             try:
-                locator.click(timeout=10000, force=True)
-                print(f"✅ Clicked '{label}' filter")
+                locator.click(timeout=5000, force=True)
+                print(f" Clicked '{label}' filter")
             except TimeoutError:
-                print(f"⚠️ Timeout on '{label}' — trying JS click")
+                print(f" Timeout on '{label}' — trying JS click")
                 try:
                     handle = locator.element_handle()
                     if handle:
                         page2.evaluate("(el) => el.click()", handle)
-                        print(f"✅ JS clicked '{label}' successfully")
+                        print(f" JS clicked '{label}' successfully")
                     else:
                         print(f"❌ Could not find element for '{label}'")
                 except Exception as e:
                     print(f"❌ Failed to JS click '{label}': {e}")
 
-        # ✅ Apply remaining filters
+        #  Apply remaining filters
         safe_click("Education & Training")
         time.sleep(2)
         safe_click("HR, Jobs & Career")
 
-        # ✅ Wait for content to update
+        #  Wait for content to update
         page2.wait_for_timeout(5000)
-        print("✅ All filters applied successfully!")
+        print(" All filters applied successfully!")
 
-        # ✅ Close browser
+        #  Close browser
         context.close()
         browser.close()
-        print("🟢 Browser closed cleanly")
+        print(" Browser closed cleanly")
 
 # Run the function
 if __name__ == "__main__":

@@ -20,7 +20,7 @@ def get_temp_email_and_otp():
         email_input = page.locator('//input[@id="identifierId"]')
         email_input.wait_for(timeout=10000)
         email_input.fill("Samyak@10times.com")
-        print("✅ Email field filled successfully!")
+        print(" Email field filled successfully!")
 
         page.locator(".VfPpkd-vQzf8d", has_text="Next").click()
         time.sleep(5)
@@ -32,6 +32,8 @@ def get_temp_email_and_otp():
         page2 = context.new_page()
         page2.goto("https://10times.com/events")
         page2.locator("(//span[@data-page='2' and text()='»'])[1]").click()
+        print(" 2nd pagination")
+        
 
 
         time.sleep(30)
