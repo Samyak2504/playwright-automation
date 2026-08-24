@@ -3,7 +3,7 @@ import time
 
 def get_temp_email_and_otp_mobile():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False, slow_mo=800)
+        browser = p.chromium.launch(headless=True, slow_mo=800)
         custom_user_agent = "TenTimes internal Testing/tentimestesting10t112"
         context = browser.new_context(
             user_agent=custom_user_agent,
@@ -29,7 +29,7 @@ def get_temp_email_and_otp_mobile():
         page.get_by_role("button", name="Next").click()
         time.sleep(4)
 
-        page.locator("input[type='password']").fill("Samyak@2021")
+        page.locator("input[type='password']").fill("Samyak@2512")
         page.get_by_role("button", name="Next").click()
         time.sleep(6)
 
