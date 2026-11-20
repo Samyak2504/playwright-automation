@@ -24,6 +24,7 @@ def get_temp_email_and_otp():
         #   Use exact XPath to click "London" filter
         locator = page.locator("//span[@class='d-flex justify-content-between' and normalize-space()='London']")
         locator.first.click()  # Use .first in case of duplicates
+        time.sleep(4)
         print(" Select location")
 
         #   Close everything
