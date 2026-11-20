@@ -1,8 +1,10 @@
 from playwright.sync_api import sync_playwright
-from datetime import date, timedelta
+from datetime import datetime, timedelta
 from urllib.parse import quote
 from decimal import Decimal, ROUND_HALF_UP
+from zoneinfo import ZoneInfo
 import os
+import sys
 import time
 
 # ---------------- Settings ----------------
@@ -53,10 +55,35 @@ PAGE_GROUPS = {
         "https://10times.com/evinterest/bQ4dqVuOlJVeu91ana-jct8fWvQLl0sBN7Nltn3B5nU=",
     ],
 }
+
+# 2 pages per batch -> the IP changes between batches
+BATCHES = [
+    ["Home page", "Event listing"],
+    ["Event detail", "Venue listing"],
+    ["Venue details", "Company"],
+    ["Profile", "evinterest Thank you page"],
+]
+
 DEVICES = ["Desktop", "Mobile"]
 CATEGORIES = ["Performance", "Accessibility", "Best Practices", "SEO"]
-HEADLESS = os.environ.get("HEADLESS", "true").lower() == "true"   # true on GitHub
+HEADLESS = os.environ.get("HEADLESS", "fasle").lower() == "true"     # true on GitHub
 RETRIES = 2
+PAUSE_BETWEEN_URLS = 20      # seconds between two checks
+PAUSE_BETWEEN_BATCHES = 60   # seconds after the IP changes
+
+# How the IP changes between batches:
+#   "manual" - script pauses; you switch VPN / mobile hotspot, then press Enter (on your Mac)
+#   "proxy"  - each batch uses the next proxy from PROXIES (comma separated), e.g.
+#              PROXIES="http://user:pass@1.2.3.4:8080,http://user:pass@5.6.7.8:8080"
+#   "none"   - no change (used on GitHub, where every batch runs on a new machine)
+IP_MODE = os.environ.get("IP_MODE", "manual")
+PROXIES = [p.strip() for p in os.environ.get("PROXIES", "").split(",") if p.strip()]
+
+# Run only one batch (1-4). Empty = all batches. GitHub sets this per job.
+ONLY_BATCH = os.environ.get("BATCH", "")
+
+# Monday-only guard. Set FORCE_RUN=true to test on another day.
+FORCE_RUN = os.environ.get("FORCE_RUN", "true").lower() == "true"
 # ------------------------------------------
 
 
@@ -85,11 +112,15 @@ def get_scores(page, url, device):
             page.goto(report_url, timeout=60000)
             scores = read_visible_scores(page)
             if len(scores) == 4:
+                # Warn about the "blocked page" pattern seen in earlier runs
+                if (scores["Performance"] == 100 and scores["Best Practices"] == 92
+                        and scores["SEO"] == 83):
+                    print("   SUSPECT: 100 / 92 / 83 pattern - check this URL manually")
                 return scores
             print(f"   attempt {attempt}: only found {list(scores)}")
         except Exception as exc:
             print(f"   attempt {attempt} failed: {str(exc).splitlines()[0]}")
-        time.sleep(10)
+        time.sleep(15)
     return {}
 
 
@@ -114,57 +145,102 @@ def print_group(group, device, urls, results):
     print(f"\n{group}    {device}")
     for i, url in enumerate(urls, 1):
         print(f"  U{i}: {url}")
-
-    header = f"  {'Category':<16}" + "".join(f"{'U' + str(i):>7}" for i in range(1, len(urls) + 1)) + f"{'Avg':>9}"
-    print(header)
+    print(f"  {'Category':<16}" + "".join(f"{'U' + str(i):>7}" for i in range(1, len(urls) + 1))
+          + f"{'Avg':>9}")
 
     category_avgs = []
     for cat in CATEGORIES:
         values = [results[url].get(cat) for url in urls]
         avg = average(values)
         category_avgs.append(avg)
-        row = f"  {cat:<16}" + "".join(f"{fmt(v):>7}" for v in values) + f"{fmt(avg):>9}"
-        print(row)
+        print(f"  {cat:<16}" + "".join(f"{fmt(v):>7}" for v in values) + f"{fmt(avg):>9}")
 
     overall = average(category_avgs)
     print(f"  {'Overall':<16}{'':>{7 * len(urls)}}{(fmt(overall) + '%'):>9}")
     return category_avgs, overall
 
 
+def current_ip(page):
+    try:
+        return page.request.get("https://api.ipify.org", timeout=15000).text().strip()
+    except Exception:
+        return "unknown"
+
+
+def change_ip(batch_no):
+    """Returns the proxy setting for this batch (or None)."""
+    if IP_MODE == "proxy":
+        if not PROXIES:
+            sys.exit("IP_MODE=proxy but PROXIES is empty")
+        server = PROXIES[(batch_no - 1) % len(PROXIES)]
+        print(f" Using proxy #{(batch_no - 1) % len(PROXIES) + 1} for this batch")
+        return {"server": server}
+    if IP_MODE == "manual" and batch_no > 1:
+        input("\n>>> Change your IP now (switch VPN server / mobile hotspot), then press Enter... ")
+    return None
+
+
+def run_batch(p, batch_no, groups):
+    print(f"\n######## Batch {batch_no}: {' + '.join(groups)} ########")
+    proxy = change_ip(batch_no)
+    if batch_no > 1 and IP_MODE != "none":
+        print(f" Waiting {PAUSE_BETWEEN_BATCHES}s before starting...")
+        time.sleep(PAUSE_BETWEEN_BATCHES)
+
+    launch_args = {"headless": HEADLESS, "slow_mo": 300}
+    if proxy:
+        launch_args["proxy"] = proxy
+    browser = p.firefox.launch(**launch_args)
+    page = browser.new_page()
+    print(f" Current IP: {current_ip(page)}")
+
+    summary = []
+    for group in groups:
+        urls = PAGE_GROUPS[group]
+        for device in DEVICES:
+            results = {}
+            for url in urls:
+                print(f" Checking [{group} | {device}] {url}")
+                results[url] = get_scores(page, url, device)
+                time.sleep(PAUSE_BETWEEN_URLS)
+            category_avgs, overall = print_group(group, device, urls, results)
+            summary.append((group, device, category_avgs, overall))
+
+    browser.close()
+    return summary
+
+
 def run_weekly_report():
-    today = date.today()
-    monday = today - timedelta(days=today.weekday())
+    now = datetime.now(ZoneInfo("Asia/Kolkata"))
+    if now.weekday() != 0 and not FORCE_RUN:
+        print(f"Today is {now:%A}. This report runs only on Monday "
+              f"(set FORCE_RUN=true to run anyway).")
+        return
+
+    monday = now.date() - timedelta(days=now.weekday())
     week_label = f"{monday:%d %b} - {monday + timedelta(days=6):%d %b}"
-    print(f"===== 10times PageSpeed report: {week_label} {today.year} =====")
+    print(f"===== 10times PageSpeed report: {week_label} {now.year} =====")
+
+    batches = list(enumerate(BATCHES, 1))
+    if ONLY_BATCH:
+        batches = [b for b in batches if str(b[0]) == ONLY_BATCH]
 
     summary = []
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=HEADLESS, slow_mo=300)
-        page = browser.new_page()
+        for batch_no, groups in batches:
+            summary += run_batch(p, batch_no, groups)
 
-        for group, urls in PAGE_GROUPS.items():
-            for device in DEVICES:
-                results = {}
-                for url in urls:
-                    print(f" Checking [{group} | {device}] {url}")
-                    results[url] = get_scores(page, url, device)
-                category_avgs, overall = print_group(group, device, urls, results)
-                summary.append((group, device, category_avgs, overall))
-
-        browser.close()
-
-    # Final overview of all groups
     print(f"\n===== SUMMARY {week_label} =====")
     print(f"  {'Page':<28}{'Device':<9}{'Perf':>8}{'Access':>8}{'BP':>8}{'SEO':>8}{'Overall':>10}")
     for group, device, avgs, overall in summary:
         print(f"  {group:<28}{device:<9}" + "".join(f"{fmt(a):>8}" for a in avgs)
               + f"{(fmt(overall) + '%'):>10}")
 
-    # Also show the summary on the GitHub Actions run page
     step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
     if step_summary:
         with open(step_summary, "a", encoding="utf-8") as f:
-            f.write(f"## 10times PageSpeed: {week_label}\n\n")
+            title = f"Batch {ONLY_BATCH}" if ONLY_BATCH else "All batches"
+            f.write(f"## 10times PageSpeed: {week_label} ({title})\n\n")
             f.write("| Page | Device | Performance | Accessibility | Best Practices | SEO | Overall |\n")
             f.write("|---|---|---|---|---|---|---|\n")
             for group, device, avgs, overall in summary:
