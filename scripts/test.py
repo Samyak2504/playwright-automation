@@ -55,7 +55,7 @@ PAGE_GROUPS = {
 }
 DEVICES = ["Desktop", "Mobile"]
 CATEGORIES = ["Performance", "Accessibility", "Best Practices", "SEO"]
-HEADLESS = os.environ.get("HEADLESS", "false").lower() == "true"   # true on GitHub
+HEADLESS = os.environ.get("HEADLESS", "true").lower() == "true"   # true on GitHub
 RETRIES = 2
 # ------------------------------------------
 
