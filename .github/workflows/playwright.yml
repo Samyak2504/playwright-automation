@@ -44,7 +44,7 @@ jobs:
             name=$(basename "$file")
             echo "::group::Running $name"
             if python "$file" > "logs/$name.log" 2>&1; then
-              echo "✅ $name" >> "$GITHUB_STEP_SUMMARY"
+              echo " $name" >> "$GITHUB_STEP_SUMMARY"
             else
               echo "$name FAILED" >> logs/failures.txt
               echo " $name" >> "$GITHUB_STEP_SUMMARY"
