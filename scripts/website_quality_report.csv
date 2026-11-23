@@ -1,0 +1,46 @@
+date,page,category,check,status,detail
+2026-11-20,Home,Accessibility,image-redundant-alt,FAIL,"[minor] Alternative text of images should not be repeated as text - 5 element(s), e.g. .c-ga[data-ga-action=""Featured Organizer""][data-ga-category=""Home""]:nth-child(1) > .motion-hover-scale.bg-white\/\[0\.06\].py-5 > .h-16.w-16.rounded-lg > .max-h-14.max-w-14.object-contain"
+2026-11-20,Home,Best Practices,Uses HTTPS,PASS,https://10times.com/
+2026-11-20,Home,Best Practices,No mixed content (http on https page),PASS,
+2026-11-20,Home,Best Practices,No browser console errors,FAIL,"[JavaScript Error: ""The resource from “https://accounts.google.com/gsi/client” was blocked due to MIME type (“text/html”) mismatch (X-Content-Type-Options: nosniff)."" {file: ""https://10times.com/"" line: 0}]"
+2026-11-20,Home,Best Practices,No JavaScript page errors,PASS,
+2026-11-20,Home,Best Practices,No failed network requests (4xx/5xx),FAIL,403 https://accounts.google.com/gsi/client
+2026-11-20,Home,Best Practices,Has <!DOCTYPE html>,PASS,
+2026-11-20,Home,Best Practices,Charset declared,PASS,
+2026-11-20,Home,Best Practices,Viewport meta tag present,PASS,
+2026-11-20,Home,SEO,HTTP status is 200,PASS,status 200
+2026-11-20,Home,SEO,Page has a <title>,FAIL,"129 chars: Events, Global Trade Shows, All Conferences, Upcoming Fairs "
+2026-11-20,Home,SEO,Meta description present (50-160 chars),FAIL,330 chars
+2026-11-20,Home,SEO,Page is indexable (no noindex),PASS,no robots meta
+2026-11-20,Home,SEO,Canonical link present,PASS,https://10times.com/
+2026-11-20,Home,SEO,<html lang> is set,PASS,en
+2026-11-20,Home,SEO,Exactly one <h1>,PASS,1 found
+2026-11-20,Home,SEO,All images have alt attribute,PASS,0 without alt
+2026-11-20,Home,SEO,Links have descriptive text,PASS,0 vague link(s)
+2026-11-20,Home,SEO,Links are crawlable (no javascript: href),PASS,0 found
+2026-11-20,Home,SEO,robots.txt is available,PASS,status 200
+2026-11-20,Event Listing,Accessibility,aria-hidden-focus,FAIL,"[serious] ARIA hidden element must not be focusable or contain focusable elements - 15 element(s), e.g. div[aria-hidden=""true""]:nth-child(16)"
+2026-11-20,Event Listing,Accessibility,aria-prohibited-attr,FAIL,"[serious] Elements must only use permitted ARIA attributes - 26 element(s), e.g. .contents:nth-child(2) > .tc-ev > .tc-rail > .tc-rail-size[title=""Large crowd expected""][aria-label=""Large crowd expected""]"
+2026-11-20,Event Listing,Accessibility,landmark-main-is-top-level,FAIL,"[moderate] Main landmark should not be contained in another landmark - 1 element(s), e.g. .tc-mid"
+2026-11-20,Event Listing,Accessibility,landmark-no-duplicate-main,FAIL,"[moderate] Document should not have more than one main landmark - 1 element(s), e.g. .flex-1 > main"
+2026-11-20,Event Listing,Accessibility,landmark-unique,FAIL,"[moderate] Landmarks should have a unique role or role/label/title (i.e. accessible name) combination - 2 element(s), e.g. .flex-1 > main"
+2026-11-20,Event Listing,Accessibility,nested-interactive,FAIL,"[serious] Interactive controls must not be nested - 8 element(s), e.g. .maplibregl-marker.maplibregl-marker-anchor-center[aria-label=""Map marker""]:nth-child(2)"
+2026-11-20,Event Listing,Best Practices,Uses HTTPS,PASS,https://10times.com/events
+2026-11-20,Event Listing,Best Practices,No mixed content (http on https page),PASS,
+2026-11-20,Event Listing,Best Practices,No browser console errors,FAIL,"[JavaScript Error: ""The resource from “https://accounts.google.com/gsi/client” was blocked due to MIME type (“text/html”) mismatch (X-Content-Type-Options: nosniff)."" {file: ""https://10times.com/events"" line: 0}]"
+2026-11-20,Event Listing,Best Practices,No JavaScript page errors,PASS,
+2026-11-20,Event Listing,Best Practices,No failed network requests (4xx/5xx),FAIL,403 https://accounts.google.com/gsi/client
+2026-11-20,Event Listing,Best Practices,Has <!DOCTYPE html>,PASS,
+2026-11-20,Event Listing,Best Practices,Charset declared,PASS,
+2026-11-20,Event Listing,Best Practices,Viewport meta tag present,PASS,
+2026-11-20,Event Listing,SEO,HTTP status is 200,PASS,status 200
+2026-11-20,Event Listing,SEO,Page has a <title>,PASS,"57 chars: All Events, All Upcoming Events, Popular Events to Attend"
+2026-11-20,Event Listing,SEO,Meta description present (50-160 chars),FAIL,275 chars
+2026-11-20,Event Listing,SEO,Page is indexable (no noindex),PASS,no robots meta
+2026-11-20,Event Listing,SEO,Canonical link present,PASS,https://10times.com/events
+2026-11-20,Event Listing,SEO,<html lang> is set,PASS,en
+2026-11-20,Event Listing,SEO,Exactly one <h1>,PASS,1 found
+2026-11-20,Event Listing,SEO,All images have alt attribute,PASS,0 without alt
+2026-11-20,Event Listing,SEO,Links have descriptive text,FAIL,1 vague link(s)
+2026-11-20,Event Listing,SEO,Links are crawlable (no javascript: href),PASS,0 found
+2026-11-20,Event Listing,SEO,robots.txt is available,PASS,status 200
