@@ -47,7 +47,7 @@ jobs:
               echo "✅ $name" >> "$GITHUB_STEP_SUMMARY"
             else
               echo "$name FAILED" >> logs/failures.txt
-              echo "❌ $name" >> "$GITHUB_STEP_SUMMARY"
+              echo " $name" >> "$GITHUB_STEP_SUMMARY"
               failed=1
             fi
             cat "logs/$name.log"
