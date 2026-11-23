@@ -8,43 +8,60 @@ on:
     - cron: '30 16 * * *'   # 10:00 PM IST
   workflow_dispatch:
 
+concurrency:
+  group: daily-scripts
+  cancel-in-progress: false
+
 jobs:
   run-scripts:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
 
-    - name: Install dependencies
-      run: |
-        pip install playwright
-        playwright install
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
 
-    - name: Run all scripts one by one and collect errors
-      run: |
-        mkdir -p logs
-        failed=0
-        for file in scripts/*.py; do
-          echo "Running $file"
-          if ! python "$file" >> logs/$(basename "$file").log 2>&1; then
-            echo "$file FAILED" >> logs/failures.txt
-            failed=1
+      - name: Run all scripts one by one and collect errors
+        env:
+          LOGIN_EMAIL: ${{ secrets.LOGIN_EMAIL }}
+          LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
+        run: |
+          shopt -s nullglob
+          mkdir -p logs
+          failed=0
+          for file in scripts/*.py; do
+            name=$(basename "$file")
+            echo "::group::Running $name"
+            if python "$file" > "logs/$name.log" 2>&1; then
+              echo "✅ $name" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "$name FAILED" >> logs/failures.txt
+              echo "❌ $name" >> "$GITHUB_STEP_SUMMARY"
+              failed=1
+            fi
+            cat "logs/$name.log"
+            echo "::endgroup::"
+          done
+          if [ $failed -eq 1 ]; then
+            echo "Some scripts failed. See logs/failures.txt"
+            exit 1
           fi
-        done
-        if [ $failed -eq 1 ]; then
-          echo "Some scripts failed. See logs/failures.txt"
-          exit 1
-        fi
 
-    - name: Upload logs as artifact
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: script-logs
-        path: logs/
+      - name: Upload logs as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: script-logs-${{ github.run_id }}
+          path: logs/
+          retention-days: 14
