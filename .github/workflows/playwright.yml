@@ -21,16 +21,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Check required files
+        run: |
+          echo "Repo contents:"
+          ls -la
+          if [ ! -f requirements.txt ]; then
+            echo "::error::requirements.txt not found at repo root"
+            exit 1
+          fi
+          if [ ! -d scripts ]; then
+            echo "::error::scripts/ folder not found at repo root"
+            exit 1
+          fi
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
           cache: 'pip'
+          cache-dependency-path: requirements.txt
 
       - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
-          playwright install --with-deps chromium
+          pip install playwright
+          python -m playwright install --with-deps chromium
 
       - name: Run all scripts one by one and collect errors
         env:
@@ -40,21 +56,33 @@ jobs:
           shopt -s nullglob
           mkdir -p logs
           failed=0
-          for file in scripts/*.py; do
+          files=(scripts/*.py)
+
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "::warning::No .py files found in scripts/"
+            echo "No scripts found" > logs/no-scripts.txt
+            exit 0
+          fi
+
+          echo "## Script results" >> "$GITHUB_STEP_SUMMARY"
+
+          for file in "${files[@]}"; do
             name=$(basename "$file")
             echo "::group::Running $name"
             if python "$file" > "logs/$name.log" 2>&1; then
-              echo " $name" >> "$GITHUB_STEP_SUMMARY"
+              echo "✅ $name" >> "$GITHUB_STEP_SUMMARY"
             else
               echo "$name FAILED" >> logs/failures.txt
-              echo " $name" >> "$GITHUB_STEP_SUMMARY"
+              echo "❌ $name" >> "$GITHUB_STEP_SUMMARY"
               failed=1
             fi
             cat "logs/$name.log"
             echo "::endgroup::"
           done
+
           if [ $failed -eq 1 ]; then
-            echo "Some scripts failed. See logs/failures.txt"
+            echo "::error::Some scripts failed. See logs/failures.txt"
+            cat logs/failures.txt
             exit 1
           fi
 
@@ -65,3 +93,4 @@ jobs:
           name: script-logs-${{ github.run_id }}
           path: logs/
           retention-days: 14
+          if-no-files-found: ignore
